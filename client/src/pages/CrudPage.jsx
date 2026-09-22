@@ -8,7 +8,8 @@ import EmptyState from '../components/EmptyState';
 
 export default function CrudPage({ title, endpoint, fields }) {
   const { user } = useAuth();
-  const canWrite = ['super_admin', 'hospital_admin', 'department_manager'].includes(user?.role);
+  const canUpdate = ['super_admin', 'hospital_admin', 'department_manager'].includes(user?.role);
+  const canDelete = ['super_admin', 'hospital_admin'].includes(user?.role);
   const [items, setItems] = useState([]);
   const [form, setForm] = useState({});
   const [editing, setEditing] = useState(null);
@@ -74,7 +75,7 @@ export default function CrudPage({ title, endpoint, fields }) {
             <h3>{editing ? 'Edit record' : 'Add record'}</h3>
             {editing && <button className="ghost" onClick={reset}>Cancel</button>}
           </div>
-          {canWrite ? (
+          {canUpdate ? (
             <form onSubmit={submit} className="crud-form">
               {fields.map(([key, label, type]) => (
                 <label className="field" key={key}>
@@ -102,20 +103,20 @@ export default function CrudPage({ title, endpoint, fields }) {
           ) : (
             <div className="table-wrap">
               <table>
-                <thead><tr>{fields.map((field) => <th key={field[0]}>{field[1]}</th>)}{canWrite && <th>Actions</th>}</tr></thead>
+                <thead><tr>{fields.map((field) => <th key={field[0]}>{field[1]}</th>)}{(canUpdate || canDelete) && <th>Actions</th>}</tr></thead>
                 <tbody>
                   {items.map((item) => (
                     <tr key={item._id}>
                       {fields.map(([key]) => <td key={key}>{String(item[key] ?? '—')}</td>)}
-                      {canWrite && (
+                      {(canUpdate || canDelete) && (
                         <td>
                           <div className="row-actions">
-                            <button className="icon-btn" onClick={() => { setEditing(item._id); setForm(Object.fromEntries(fields.map(([key]) => [key, item[key] ?? '']))); }} aria-label="Edit record">
+                            {canUpdate && <button className="icon-btn" onClick={() => { setEditing(item._id); setForm(Object.fromEntries(fields.map(([key]) => [key, item[key] ?? '']))); }} aria-label="Edit record" title="Edit record">
                               <Pencil size={15} />
-                            </button>
-                            <button className="icon-btn danger" onClick={() => remove(item._id)} aria-label="Delete record">
+                            </button>}
+                            {canDelete && <button className="icon-btn danger" onClick={() => remove(item._id)} aria-label="Delete record" title="Delete record">
                               <Trash2 size={15} />
-                            </button>
+                            </button>}
                           </div>
                         </td>
                       )}
