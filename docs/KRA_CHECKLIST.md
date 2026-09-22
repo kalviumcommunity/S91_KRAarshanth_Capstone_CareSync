@@ -7,7 +7,7 @@
 | 2.3 React components | `components/`, pages and Shell |
 | 2.4 Database schema | Mongoose models in `server/src/models` |
 | 2.5 Read/write | CRUD controller + MongoDB |
-| 2.6 GET | CRUD GET routes |
+| 2.6 GET | [CRUD GET routes](KRA_2_6_GET_API.md) |
 | 2.7 POST | CRUD POST routes |
 | 2.8 PUT | CRUD PUT routes |
 | 2.9 Update/delete | React CRUD UI |
