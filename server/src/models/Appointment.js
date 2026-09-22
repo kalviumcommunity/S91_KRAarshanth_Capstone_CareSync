@@ -1,0 +1,1 @@
+import mongoose from 'mongoose'; const schema=new mongoose.Schema({patientName:{type:String,required:true},doctorName:{type:String,required:true},date:{type:Date,required:true},status:{type:String,enum:['Scheduled','Completed','Cancelled','No-show'],default:'Scheduled'}},{timestamps:true});schema.index({date:1});export default mongoose.model('Appointment',schema);

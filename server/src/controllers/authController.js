@@ -1,0 +1,6 @@
+import jwt from 'jsonwebtoken'; import User from '../models/User.js'; import { ApiError, asyncHandler } from '../utils/apiError.js';
+function sign(user){return jwt.sign({sub:user._id.toString(),role:user.role},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN||'1d'})}
+function safe(user){return {id:user._id,name:user.name,email:user.email,role:user.role,active:user.active}}
+export const register=asyncHandler(async(req,res)=>{const {name,email,password,role}=req.body;const exists=await User.findOne({email});if(exists)throw new ApiError(409,'An account with this email already exists');if(role==='super_admin')throw new ApiError(403,'Super admin accounts cannot be self-registered');const user=await User.create({name,email,password,role});res.status(201).json({success:true,message:'Account created',token:sign(user),user:safe(user)})});
+export const login=asyncHandler(async(req,res)=>{const {email,password}=req.body;const user=await User.findOne({email}).select('+password');if(!user||!user.active||!(await user.comparePassword(password)))throw new ApiError(401,'Invalid email or password');res.json({success:true,message:'Login successful',token:sign(user),user:safe(user)})});
+export const me=asyncHandler(async(req,res)=>res.json({success:true,user:safe(req.user)}));
