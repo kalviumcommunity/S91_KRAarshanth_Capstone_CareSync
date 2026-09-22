@@ -1,429 +1,191 @@
 # IHROS — Intelligent Hospital Resource Optimization System
-
-## Capstone Project
-
-**Project:** IHROS  
-**Full Form:** Intelligent Hospital Resource Optimization System  
-**Domain:** Healthcare / Hospital Operations / Resource Optimization  
-**Technology Focus:** MERN Stack + Authentication + Role-Based Authorization + Future Analytics/AI
+> **Capstone Project:** Full-Stack Healthcare Operational Intelligence  
+> **Topic:** Addressing hospital resource bottlenecks caused by mismatches between patient demand, doctor availability, and facility capacity through data-driven planning.  
+> **Milestone Covered:** All Kalvium KRAs through **2.12 (JWT-Based Authorization)**.
 
 ---
 
-## Project Idea
+## 1. Project Overview & Problem Statement
 
-IHROS is a web-based hospital operations platform designed to improve how hospitals manage and coordinate critical resources such as **doctors, patients, departments, beds, and appointments**.
+### The Problem
+Hospitals operate in high-stress, resource-constrained environments where mismatches between patient demand, physician shifts, and facility capacity trigger severe bottlenecks:
+- Emergency department overcrowding and boarding delays.
+- Intensive Care Unit (ICU) bed shortages occurring alongside unmonitored idle bed time.
+- Imbalanced outpatient appointment loads leading to patient wait times exceeding 85 minutes.
+- Manual morning spreadsheet handoffs that result in stale capacity counts and unnecessary patient diverts.
 
-Hospitals can experience operational bottlenecks when patient demand, doctor availability, department capacity, and facility utilization are not coordinated through a centralized system. IHROS addresses this problem by providing a secure operational platform where authorized hospital staff can manage resources, monitor operational information, and build a structured data foundation for future analytics, prediction, and resource optimization.
-
-The project is designed around the progression:
-
-**Manage → Monitor → Analyze → Predict → Optimize**
-
-The current foundation focuses on secure hospital resource management and reliable operational data. Future development can extend this foundation with demand forecasting, bed-demand prediction, doctor workload analysis, department capacity planning, alerts, and intelligent resource recommendations.
-
----
-
-## Problem Statement
-
-> Hospitals experience resource bottlenecks due to mismatches between patient demand, doctor availability, and facility utilization. Data-driven planning can improve operational efficiency and support better resource management.
-
-### Core Challenges
-
-- Unpredictable patient arrivals and changing demand
-- Limited visibility into hospital resource utilization
-- Doctor availability and appointment scheduling conflicts
-- Bed allocation and capacity-management difficulties
-- Department-level resource imbalance
-- Manual operational planning
-- Delayed administrative decisions
-- Underutilized or overloaded resources
-- Lack of a unified operational data foundation
+### The Solution: IHROS
+**IHROS** is a centralized operational command center built on the MERN stack. It establishes a real-time transactional data layer connecting doctors, patients, departments, beds, and appointments. Backed by MongoDB, protected by bcrypt and JWT-based Role-Based Access Control (RBAC), IHROS provides sub-second operational visibility and sets the stage for AI-driven predictive allocation.
 
 ---
 
-## Target Users
+## 2. Day-by-Day Capstone Journey Plan
 
-### Hospital Admin
-Responsible for hospital-wide operations, resource management, access control, and overall visibility.
-
-### Department Manager
-Monitors and coordinates resources within a department, including doctors, beds, and appointments.
-
-### Doctor
-Uses the system for relevant appointment and availability workflows.
-
-### Nurse
-Uses permitted operational information needed for day-to-day hospital activities.
-
----
-
-## Core Modules
-
-- User Authentication
-- Role-Based Authorization
-- Dashboard
-- Doctor Management
-- Patient Management
-- Department Management
-- Bed Management
-- Appointment Management
-- REST API Layer
-- Validation and Error Handling
-- Operational Data Storage
+| Day | Milestone / Phase | Activities & Deliverables |
+|---|---|---|
+| **Day 1** | **KRA 1.3: PRD Creation** | Documented problem statement, stakeholder matrix, quantified KPIs, dataset sources, user stories, in-scope vs out-of-scope boundaries, and 15-point checklist in `docs/PRD.md`. |
+| **Day 2** | **KRA 1.4: Mock UX & User Flows** | Designed analytical user modes (Monitor, Explore, Compare, Filter, Investigate), created wireframe ASCII layouts, defined error & empty states in `docs/MOCK_UX.md`. |
+| **Day 3** | **KRA 2.1: GitHub Repo & Git Setup** | Configured repository following naming convention `Squad_Name_Capstone_Project`, created `.gitignore`, documented branching strategy, and added CodiumAI review instructions. |
+| **Day 4** | **KRA 2.2: React App Initialization** | Initialized frontend client using Vite with React 18, set up proxy configuration in `vite.config.js`, and structured client-side routing. |
+| **Day 5** | **KRA 2.3: Reusable Components** | Built modular components: `StatCard`, `FormField`, `Shell`, `ProtectedAction`, responsive topbar, and sidebar navigation. |
+| **Day 6** | **KRA 2.4: Database Schema Design** | Designed Mongoose schemas for `User`, `Department`, `Doctor`, `Bed`, `Patient`, and `Appointment` with data validation, indexes, and timestamps. |
+| **Day 7** | **KRA 2.5: DB Read & Write Setup** | Connected Express to MongoDB with connection pooling and error listeners; built database seeder `server/src/scripts/seed.js` for one-command test data. |
+| **Day 8** | **KRA 2.6: GET API Endpoints** | Built RESTful GET endpoints for list queries with pagination, field filtering, regex search, and single-item lookups (`/api/:resource/:id`). |
+| **Day 9** | **KRA 2.7: POST API Endpoints** | Implemented validated POST creation routes returning HTTP 201 with `express-validator` request sanitization and error handling. |
+| **Day 10** | **KRA 2.8: PUT API Endpoints** | Implemented validated PUT update routes returning HTTP 200 with MongoDB ObjectId validation and atomic update handling. |
+| **Day 11** | **KRA 2.9: Update & Delete Functionality** | Completed DELETE endpoints (HTTP 200) and linked React frontend with live editing, search filtering, and deletion confirmation dialogs. |
+| **Day 12** | **KRA 2.10: Entity Relationships** | Modeled and populated relational links: Doctors & Beds assigned to Departments, Appointments referencing Doctors and Patients. |
+| **Day 13** | **KRA 2.11: Password Authentication** | Implemented user registration and login with bcrypt password hashing (salt rounds = 12) and secure credential validation. |
+| **Day 14** | **KRA 2.12: JWT Authorization & Testing** | Deployed signed JWT issuance, `authenticate` and `authorize(roles)` middlewares, route protection, and automated Jest + Supertest suites. |
 
 ---
 
-## High-Level Workflow
+## 3. Architecture & Tech Stack
 
 ```text
-User
-  ↓
-Login / Register
-  ↓
-Authentication
-(Bcrypt + JWT)
-  ↓
-Role-Based Authorization
-(RBAC)
-  ↓
-IHROS Dashboard
-  ↓
-Hospital Resources
-  ├── Doctors
-  ├── Patients
-  ├── Departments
-  ├── Beds
-  └── Appointments
-  ↓
-REST APIs
-(Node.js + Express)
-  ↓
-Validation + Error Handling
-  ↓
-Mongoose
-  ↓
-MongoDB
-  ↓
-Database Response
-  ↓
-React UI Update
-  ↓
-Operational Data
-  ↓
-Future Analytics
-  ↓
-Prediction
-  ↓
-Resource Optimization
+┌─────────────────────────────────────────────────────────────┐
+│               Frontend: React 18 + Vite                     │
+│  - React Router DOM v7 (Client Routing & Route Guards)      │
+│  - Lucide React (Operational Healthcare Icons)              │
+│  - Axios with Request/Response Interceptors for JWT         │
+└──────────────────────────────┬──────────────────────────────┘
+                               │  REST Calls (JSON + Bearer JWT)
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│               Backend: Express 5 + Node.js 20               │
+│  - Rate Limiting Middleware (express-rate-limit)            │
+│  - Morgan HTTP Request Logger & CORS                        │
+│  - express-validator (Request Schema Validation)            │
+│  - JWT Middleware (authenticate) & RBAC Guard (authorize)   │
+│  - Centralized Error Handler (ApiError + AsyncHandler)      │
+└──────────────────────────────┬──────────────────────────────┘
+                               │  Mongoose 8 ODM
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│               Database: MongoDB                             │
+│  - Collections: Users, Departments, Doctors, Beds,          │
+│                 Patients, Appointments                      │
+│  - B-Tree Indexes on unique IDs, dates, and lookups         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Technology Stack
+## 4. Role-Based Access Control (RBAC) Matrix
 
-### Frontend
-- React
-- Vite
-- React Router
-- Axios
-- CSS / responsive UI
-
-### Backend
-- Node.js
-- Express.js
-- REST APIs
-- Express Validator
-- JWT
-- bcrypt
-
-### Database
-- MongoDB
-- Mongoose
-
-### Security
-- JWT Authentication
-- Role-Based Access Control (RBAC)
-- Password hashing with bcrypt
-- Protected routes
-- Authentication rate limiting
-- Environment variables
-- Request validation
-- Centralized error handling
-
-### Development & Collaboration
-- Git
-- GitHub
-- Pull Requests
-- CodiumAI review
-- VS Code
-- Postman / API testing
+| Endpoint / Operation | HTTP Method | `super_admin` | `hospital_admin` | `department_manager` | `doctor` | `nurse` | Public |
+|---|---|---|---|---|---|---|---|
+| Register Account | POST `/api/auth/register` | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Login / Get Token | POST `/api/auth/login` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Current Profile | GET `/api/auth/me` | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Dashboard Metrics | GET `/api/dashboard/summary` | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| View Resources (Read) | GET `/api/:resource` | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Create Resource | POST `/api/:resource` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Update Resource | PUT `/api/:resource/:id` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Delete Resource | DELETE `/api/:resource/:id` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
-## Repository Structure
+## 5. Quick Start & Local Setup
 
-```text
-IHROS/
-├── client/
-│   └── React frontend
-├── server/
-│   └── Node.js + Express backend
-├── docs/
-│   ├── API documentation
-│   ├── Data model documentation
-│   └── KRA checklist
-├── README.md
-└── package.json
+### 1. Prerequisites
+- **Node.js**: v20+
+- **MongoDB**: Running locally on port `27017` or a MongoDB Atlas URI.
+
+### 2. Installation
+```bash
+# Clone the repository
+git clone <YOUR_REPO_URL>
+cd <YOUR_REPO_FOLDER>
+
+# Install all workspace dependencies
+npm install
+```
+
+### 3. Environment Configuration
+Verify `server/.env` exists:
+```env
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/ihros
+JWT_SECRET=super_secret_ihros_jwt_hospital_resource_key_2026_secure
+JWT_EXPIRES_IN=1d
+CLIENT_URL=http://localhost:5173
+```
+
+### 4. Seed Realistic Data
+Populate the database with demo hospital departments, doctors, beds, patients, appointments, and ready-to-test role accounts:
+```bash
+npm run seed
+```
+
+### 5. Run the Application
+```bash
+# Concurrently starts Express API (port 5000) and Vite React app (port 5173)
+npm run dev
+```
+- **Frontend Command Center:** [http://localhost:5173](http://localhost:5173)
+- **Backend API Health Check:** [http://localhost:5000/api/health](http://localhost:5000/api/health)
+
+### 6. Run Automated Tests
+```bash
+npm run test
 ```
 
 ---
 
-## Capstone Development Plan
+## 6. Pre-Configured Demo Credentials
 
-This plan is organized around the project foundation and the planned KRA sequence.
-
-### Day 1 — Project Setup & Repository
-- Create the capstone GitHub repository
-- Set the repository naming convention
-- Initialize Git
-- Create the main branch
-- Prepare the initial README
-- Define the project problem and technology stack
-
-### Day 2 — Product Requirement & Planning
-- Finalize the project problem statement
-- Identify target users
-- Define product scope
-- Identify core features
-- Define assumptions and success criteria
-- Prepare the PRD
-
-### Day 3 — Mock UX & User Flow
-- Design the main user journeys
-- Design Login/Register flow
-- Design Dashboard
-- Design Doctors, Patients, Departments, Beds, and Appointments screens
-- Define navigation and major interactions
-
-### Day 4 — React Application Initialization
-- Initialize the React frontend
-- Configure Vite
-- Set up application routing
-- Create the initial application layout
-- Prepare reusable UI components
-
-### Day 5 — React Component Development
-- Build navigation components
-- Build dashboard components
-- Build forms and tables
-- Add reusable form fields and UI elements
-- Implement responsive layouts
-
-### Day 6 — Database Schema Design
-- Design the MongoDB collections
-- Create Mongoose schemas
-- Define User, Doctor, Patient, Department, Bed, and Appointment models
-- Define validation rules and indexes where needed
-
-### Day 7 — Database Read & Write Operations
-- Connect the backend to MongoDB
-- Implement create operations
-- Implement read operations
-- Test database interactions
-- Validate API-to-database communication
-
-### Day 8 — GET API Implementation
-- Create resource GET routes
-- Return Doctors, Patients, Departments, Beds, and Appointments
-- Add query/filter support where required
-- Validate API responses
-
-### Day 9 — POST API Implementation
-- Create resource POST routes
-- Implement request validation
-- Add new resource records
-- Handle duplicate and invalid-data errors
-
-### Day 10 — PUT API Implementation
-- Create update routes
-- Validate update requests
-- Update resource records
-- Verify successful and failed update scenarios
-
-### Day 11 — Update & Delete Functionality
-- Complete frontend CRUD interactions
-- Implement delete operations
-- Add confirmation/action feedback
-- Handle API errors in the UI
-
-### Day 12 — Entity Relationships
-- Connect related hospital resources conceptually
-- Define Department–Doctor relationships
-- Define Department–Bed relationships
-- Connect Patient–Appointment–Doctor workflows
-- Validate consistency between entities
-
-### Day 13 — Authentication
-- Create user registration
-- Hash passwords using bcrypt
-- Implement login
-- Return authenticated user information securely
-
-### Day 14 — JWT Authorization & RBAC
-- Generate JWT tokens
-- Protect private routes
-- Verify JWT tokens on protected requests
-- Implement role-based authorization
-- Restrict actions based on role
-
-### Day 15 — Integration & Testing
-- Test frontend/backend integration
-- Test authentication flows
-- Test CRUD workflows
-- Test authorization rules
-- Test validation and error handling
-- Fix integration issues
-
-### Day 16 — Documentation & Review
-- Update README
-- Update API/data-model documentation
-- Review the completed KRA work
-- Run application validation checks
-- Record demonstration videos
-- Create required GitHub Pull Requests
-
-### Future Development Phase
-After the operational foundation is stable:
-
-- Historical operational analytics
-- Patient-demand forecasting
-- Bed-demand prediction
-- Doctor workload analysis
-- Department capacity planning
-- Early-warning alerts
-- Intelligent resource recommendations
-- Advanced dashboards
-- Real-time operational signals
-- Production hardening and monitoring
+| Role | Email | Password | Allowed Permissions |
+|---|---|---|---|
+| **Hospital Admin** | `admin@ihros.local` | `Admin@123` | Full access: View, Add, Update, and Delete all resources. |
+| **Department Manager**| `manager@ihros.local`| `Manager@123` | Operations access: View, Add, and Update doctors, beds, appointments. |
+| **Physician / Doctor**| `doctor@ihros.local` | `Doctor@123` | Clinical read-only access. |
+| **Ward Nurse** | `nurse@ihros.local` | `Nurse@123` | Operational read-only access. |
 
 ---
 
-## Product Differentiation
+## 7. Kalvium Submission & Git Workflow
 
-IHROS is designed to go beyond simple hospital record management.
-
-A basic management workflow can be represented as:
-
-```text
-Data → Store → Display
+### Branch Naming Guide for KRAs
+Follow standard Kalvium branch naming for each sub-milestone:
+```bash
+# Example for KRA 2.12
+git checkout -b feat/2-12-jwt-authorization
+git add .
+git commit -m "feat(auth): implement JWT authorization and RBAC middleware"
+git push -u origin feat/2-12-jwt-authorization
 ```
 
-IHROS is designed toward:
-
+### Requesting CodiumAI Review
+In your GitHub Pull Request description or comment, copy and paste:
 ```text
-Data
- ↓
-Manage
- ↓
-Monitor
- ↓
-Analyze
- ↓
-Predict
- ↓
-Recommend
- ↓
-Optimize
+@CodiumAI-Agent /review
 ```
-
-The current implementation establishes the secure operational foundation required for this longer-term intelligence layer.
-
----
-
-## Security Approach
-
-Security is treated as a core part of the architecture.
-
-- Passwords are hashed using bcrypt
-- JWT tokens are used for authenticated API requests
-- Protected routes require valid authentication
-- Role-based authorization controls access
-- Input validation reduces invalid requests
-- Rate limiting is applied to sensitive authentication routes
-- Environment variables are used for secrets/configuration
-- Centralized error handling avoids exposing unnecessary internal details
+*(Notice the space between `@CodiumAI-Agent` and `/review`)*. Once generated, address feedback and merge into `main`.
 
 ---
 
-## Expected Project Impact
+## 8. 3-Minute Video Recording Script (Presentation Guide)
 
-IHROS aims to support:
+When recording your video for the Kalvium evaluation (using Google Meet with camera ON and full screen shared):
 
-- Centralized hospital resource management
-- Better operational visibility
-- Improved resource coordination
-- Reduced manual coordination effort
-- Better utilization of available resources
-- A stronger data foundation for operational analytics
-- Future predictive planning and optimization
-
----
-
-## Mock UX Design
-
-**Mock UX Link:**  
-
-https://www.figma.com/design/bRyoSoBdNAfesndqgEMTKM/Untitled?node-id=2002-2763&t=CjjJjsgP9uY0NHUs-1
-
-The Mock UX demonstrates the primary IHROS screens, navigation flow, authentication journey, hospital resource-management workflows, and major user interactions.
-
----
-
-## Project Documentation
-
-- Product Requirement Document (PRD)
-- Mock UX & User Flow Design
-- API documentation
-- Data model documentation
-- KRA checklist
-- Project demonstration videos
-
----
-
-## Development Status
-
-### Foundation
-- [x] Product idea defined
-- [x] Problem statement defined
-- [x] PRD created
-- [x] Mock UX created
-- [x] Repository setup plan prepared
-
-### Current Full-Stack Foundation
-- [x] React frontend foundation
-- [x] Node.js + Express backend
-- [x] MongoDB + Mongoose
-- [x] Resource CRUD
-- [x] REST APIs
-- [x] Validation
-- [x] Error handling
-- [x] bcrypt password hashing
-- [x] JWT authentication
-- [x] Role-based authorization
-
-### Future Intelligence
-- [ ] Demand forecasting
-- [ ] Bed-demand prediction
-- [ ] Doctor workload optimization
-- [ ] Department capacity planning
-- [ ] Intelligent recommendations
-- [ ] Advanced analytics
-- [ ] Real-time operational signals
-
----
-
-## Conclusion
-
-IHROS is designed as a secure hospital operations foundation that can evolve into an intelligent resource optimization platform. The project connects hospital resources through a common operational workflow and prepares the system for future analytics, prediction, and optimization capabilities.
-
-**Manage • Monitor • Optimize • For Better Healthcare**
+1. **Minute 0:00 – 0:45 | Introduction & Problem Context**
+   - Introduce yourself: *"Hello, I am [Your Name] from Squad [Your Squad Number]. This is my Capstone Project: IHROS (Intelligent Hospital Resource Optimization System)."*
+   - Show the problem statement: *"Hospitals face severe resource bottlenecks between patient demand, physician rosters, and bed turnover. IHROS builds a unified operational command center to eliminate these bottlenecks."*
+   - Show the repository structure, `main` branch, and GitHub commit history.
+2. **Minute 0:45 – 1:45 | Architecture & Authentication Flow**
+   - Open your browser to `http://localhost:5173/login`.
+   - Open Chrome DevTools → Network tab.
+   - Log in using `admin@ihros.local` / `Admin@123`.
+   - Highlight the `/api/auth/login` network call returning HTTP 200 with the signed JWT token.
+   - Show how the frontend stores the token and how Axios attaches `Authorization: Bearer <token>` on all subsequent requests.
+3. **Minute 1:45 – 2:30 | Dashboard & CRUD Capabilities**
+   - Show the Dashboard: live patient count, doctor rosters, bed availability (`ICU`, `General`), and appointment schedules.
+   - Navigate to **Beds** or **Doctors**. Create a new record (demonstrates POST API & HTTP 201).
+   - Click the pencil icon to edit the record (demonstrates PUT API & HTTP 200).
+   - Click the delete trash icon to delete a record (demonstrates DELETE API & HTTP 200).
+4. **Minute 2:30 – 3:15 | Role-Based Access Control (RBAC) & Security**
+   - Log out and log in as `nurse@ihros.local` / `Nurse@123`.
+   - Point out that the mutation forms and delete action buttons are hidden for read-only roles.
+   - Show the backend code in `server/src/middleware/auth.js` highlighting `authenticate` (JWT verification) and `authorize('super_admin', 'hospital_admin')` (RBAC enforcement).
+   - Conclude by running `npm test` in the terminal to show all automated integration tests passing.
