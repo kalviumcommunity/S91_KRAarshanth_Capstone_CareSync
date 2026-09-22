@@ -1,5 +1,5 @@
 # IHROS — Intelligent Hospital Resource Optimization System
-> Current project package includes work through KRA 2.9: GitHub setup, React initialization, React component development, Mongoose database schema design, database read/write operations, GET APIs, POST APIs, PUT APIs, and React update/delete functionality.
+> Current project package includes work through KRA 2.10: GitHub setup, React initialization, React component development, Mongoose database schema design, database read/write operations, GET APIs, POST APIs, PUT APIs, React update/delete functionality, and entity relationships.
 
 ## Capstone
 
@@ -186,3 +186,9 @@ See `docs/KRA_2_8_PUT_API.md` for the endpoint list, update behavior, and verifi
 The shared React CRUD page supports role-aware editing and deletion for doctors, patients, departments, beds, and appointments. It submits PUT and DELETE requests through Axios, confirms destructive actions, reloads data after changes, and displays API errors.
 
 See `docs/KRA_2_9_UPDATE_DELETE_UI.md` for the user workflow and role behavior.
+
+## KRA 2.10 — Entity Relationship Implementation
+
+Mongoose ObjectId references connect doctors and beds to departments, and appointments to patients and doctors. GET responses populate those linked entities while preserving existing display fields for older records and current forms.
+
+See `docs/KRA_2_10_ENTITY_RELATIONSHIPS.md` for the relationship map and verification flow.
