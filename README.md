@@ -1,5 +1,5 @@
 # IHROS — Intelligent Hospital Resource Optimization System
-> Current project package includes work through KRA 2.11: GitHub setup, React initialization, React component development, Mongoose database schema design, database read/write operations, GET APIs, POST APIs, PUT APIs, React update/delete functionality, entity relationships, and username/password authentication.
+> Current project package includes work through KRA 2.12: GitHub setup, React initialization, React component development, Mongoose database schema design, database read/write operations, GET APIs, POST APIs, PUT APIs, React update/delete functionality, entity relationships, username/password authentication, and JWT authorization.
 
 ## Capstone
 
@@ -198,3 +198,9 @@ See `docs/KRA_2_10_ENTITY_RELATIONSHIPS.md` for the relationship map and verific
 IHROS provides registration and login with bcrypt-hashed passwords, validation, rate limiting, safe user responses, session restoration, and protected API requests from the React authentication context.
 
 See `docs/KRA_2_11_USERNAME_PASSWORD_AUTH.md` for the authentication flow and verification steps.
+
+## KRA 2.12 — JWT Authorization
+
+IHROS issues signed JWTs at registration and login, verifies Bearer tokens in middleware, restores the active user from MongoDB, attaches tokens through Axios, and applies role-based authorization to protected operations.
+
+See `docs/KRA_2_12_JWT_AUTHORIZATION.md` for the token flow and verification steps.
