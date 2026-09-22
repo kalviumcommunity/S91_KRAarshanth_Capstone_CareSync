@@ -1,6 +1,8 @@
 # IHROS — Intelligent Hospital Resource Optimization System
+> Current project package includes work through KRA 2.4: GitHub setup, React initialization, React component development, and Mongoose database schema design.
 
-## Capstone scope through KRA 2.12
+
+## Capstone scope through KRA 2.4
 
 IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The first implementation milestone covers the Kalvium capstone requirements through **Username & Password Authentication (2.11)** and **JWT-Based Authorization (2.12)**.
 
@@ -148,3 +150,16 @@ Reusable React components were introduced to keep the IHROS frontend consistent 
 - `ProtectedAction` — reusable role-aware action wrapper
 
 These components are used across the dashboard and CRUD resource workflow rather than keeping repeated UI markup inside individual pages.
+
+
+## KRA 2.5 — Database Read & Write Operations
+
+The IHROS backend is connected to MongoDB through Mongoose. Resource API calls execute real database operations for Doctors, Patients, Departments, Beds, and Appointments.
+
+- Read: `Model.find()`, `Model.findById()`, `Model.countDocuments()`
+- Create: `Model.create()`
+- Update: `Model.findByIdAndUpdate()`
+- Delete: `Model.findByIdAndDelete()`
+- Connection: `mongoose.connect(process.env.MONGO_URI)`
+
+See `docs/KRA_2_5_DATABASE_READ_WRITE.md` for the complete database flow and API examples.
