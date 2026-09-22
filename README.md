@@ -1,8 +1,9 @@
 # IHROS — Intelligent Hospital Resource Optimization System
+> Current project package includes work through KRA 2.5: GitHub setup, React initialization, React component development, Mongoose database schema design, and database read/write operations.
 
 ## Capstone
 
-IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The first implementation milestone covers the Kalvium capstone requirements through **Username & Password Authentication* and **JWT-Based Authorization **.
+IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The first implementation milestone covers the Kalvium capstone requirements through **Username & Password Authentication** and **JWT-Based Authorization**.
 
 ### Problem
 Hospitals experience resource bottlenecks when patient demand, doctor availability and facility capacity do not match. IHROS creates a single operational data layer that can later power forecasting, bottleneck detection and resource recommendations.
@@ -148,3 +149,16 @@ Reusable React components were introduced to keep the IHROS frontend consistent 
 - `ProtectedAction` — reusable role-aware action wrapper
 
 These components are used across the dashboard and CRUD resource workflow rather than keeping repeated UI markup inside individual pages.
+
+
+## KRA 2.5 — Database Read & Write Operations
+
+The IHROS backend is connected to MongoDB through Mongoose. Resource API calls execute real database operations for Doctors, Patients, Departments, Beds, and Appointments.
+
+- Read: `Model.find()`, `Model.findById()`, `Model.countDocuments()`
+- Create: `Model.create()`
+- Update: `Model.findByIdAndUpdate()`
+- Delete: `Model.findByIdAndDelete()`
+- Connection: `mongoose.connect(process.env.MONGO_URI)`
+
+See `docs/KRA_2_5_DATABASE_READ_WRITE.md` for the complete database flow and API examples.
