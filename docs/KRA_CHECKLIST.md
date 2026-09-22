@@ -11,6 +11,6 @@
 | 2.7 POST | [CRUD POST routes](KRA_2_7_POST_API.md) |
 | 2.8 PUT | [CRUD PUT routes](KRA_2_8_PUT_API.md) |
 | 2.9 Update/delete | [React CRUD UI](KRA_2_9_UPDATE_DELETE_UI.md) |
-| 2.10 Relationships | Departments, doctors, beds, patients, appointments + data model |
+| 2.10 Relationships | [Mongoose entity references](KRA_2_10_ENTITY_RELATIONSHIPS.md) |
 | 2.11 Username/password | Register/login + bcrypt |
 | 2.12 JWT | JWT issuance, verification and RBAC middleware |
