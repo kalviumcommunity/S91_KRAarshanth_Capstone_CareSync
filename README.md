@@ -1,5 +1,5 @@
 # IHROS — Intelligent Hospital Resource Optimization System
-> Current project package includes work through KRA 2.7: GitHub setup, React initialization, React component development, Mongoose database schema design, database read/write operations, GET APIs, and POST APIs.
+> Current project package includes work through KRA 2.8: GitHub setup, React initialization, React component development, Mongoose database schema design, database read/write operations, GET APIs, POST APIs, and PUT APIs.
 
 ## Capstone
 
@@ -174,3 +174,9 @@ See `docs/KRA_2_6_GET_API.md` for the endpoint list, response shape, and verific
 Authenticated POST endpoints create doctors, patients, departments, beds, and appointments through Mongoose and return HTTP 201 responses containing the persisted documents.
 
 See `docs/KRA_2_7_POST_API.md` for the endpoint list, request flow, and verification steps.
+
+## KRA 2.8 — PUT API Implementation
+
+Authenticated PUT endpoints update doctors, patients, departments, beds, and appointments through Mongoose and return the updated documents with HTTP 200 responses.
+
+See `docs/KRA_2_8_PUT_API.md` for the endpoint list, update behavior, and verification steps.
