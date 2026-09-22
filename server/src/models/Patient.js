@@ -1,0 +1,1 @@
+import mongoose from 'mongoose'; const schema=new mongoose.Schema({name:{type:String,required:true,trim:true},email:{type:String,lowercase:true,trim:true},age:{type:Number,required:true,min:0,max:130},gender:{type:String,required:true},condition:{type:String,required:true}},{timestamps:true});export default mongoose.model('Patient',schema);

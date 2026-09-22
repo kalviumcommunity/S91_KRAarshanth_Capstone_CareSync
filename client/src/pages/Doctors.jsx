@@ -1,0 +1,1 @@
+import CrudPage from './CrudPage'; export default function Doctors(){return <CrudPage title="Doctors" endpoint="doctors" fields={[['name','Name','text'],['email','Email','email'],['specialization','Specialization','text'],['department','Department','text'],['availability','Availability','text']]}/>}
