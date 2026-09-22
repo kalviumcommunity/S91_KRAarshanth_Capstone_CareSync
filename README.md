@@ -1,8 +1,8 @@
 # IHROS — Intelligent Hospital Resource Optimization System
 
-## Capstone scope through KRA 2.12
+## Capstone
 
-IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The first implementation milestone covers the Kalvium capstone requirements through **Username & Password Authentication (2.11)** and **JWT-Based Authorization (2.12)**.
+IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The first implementation milestone covers the Kalvium capstone requirements through **Username & Password Authentication* and **JWT-Based Authorization **.
 
 ### Problem
 Hospitals experience resource bottlenecks when patient demand, doctor availability and facility capacity do not match. IHROS creates a single operational data layer that can later power forecasting, bottleneck detection and resource recommendations.
