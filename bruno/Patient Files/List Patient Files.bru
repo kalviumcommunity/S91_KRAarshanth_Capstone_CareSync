@@ -1,0 +1,15 @@
+meta {
+  name: List Patient Files
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/patients/{{patientId}}/files
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

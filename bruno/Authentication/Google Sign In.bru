@@ -1,0 +1,28 @@
+meta {
+  name: Google Sign In
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/google
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "credential": "{{googleCredential}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setEnvVar("token", res.body.token);
+    bru.setEnvVar("userId", res.body.user.id);
+  }
+}

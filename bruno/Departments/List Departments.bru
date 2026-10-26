@@ -1,0 +1,15 @@
+meta {
+  name: List Departments
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/departments?limit=50&search={{searchTerm}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

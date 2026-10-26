@@ -1,0 +1,32 @@
+meta {
+  name: Create Bed
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/beds
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "bedNumber": "BRU-101",
+    "departmentId": "{{departmentId}}",
+    "type": "General",
+    "status": "Available"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setEnvVar("bedId", res.body.data._id);
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Create Patient
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/patients
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Bruno Demo Patient",
+    "email": "bruno-patient@example.com",
+    "age": 35,
+    "gender": "Other",
+    "condition": "Routine checkup"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setEnvVar("patientId", res.body.data._id);
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Assign User Role
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/auth/users/{{userId}}/role
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "role": "department_manager"
+  }
+}

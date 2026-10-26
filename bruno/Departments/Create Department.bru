@@ -1,0 +1,32 @@
+meta {
+  name: Create Department
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/departments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Bruno Cardiology",
+    "code": "BRU-CARD",
+    "capacity": 24,
+    "specialty": "Cardiology"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setEnvVar("departmentId", res.body.data._id);
+}
