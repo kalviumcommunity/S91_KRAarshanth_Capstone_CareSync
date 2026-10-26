@@ -16,3 +16,4 @@
 | 2.12 JWT | [JWT issuance, verification and RBAC](KRA_2_12_JWT_AUTHORIZATION.md) |
 | 2.13 Third-party authentication | [Google sign-in with verified ID tokens](KRA_2_13_THIRD_PARTY_AUTH.md) |
 | 2.14 File upload | [Patient file upload and authenticated downloads](KRA_2_14_FILE_UPLOAD.md) |
+| 2.15 Bruno API documentation | [Bruno collection and usage](../bruno/README.md) |

@@ -1,0 +1,15 @@
+meta {
+  name: List Patients
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/patients?limit=50&search={{searchTerm}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

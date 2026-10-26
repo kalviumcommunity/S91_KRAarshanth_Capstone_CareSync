@@ -39,6 +39,11 @@ MongoDB
 - 2.12 JWT-based authentication + role-based authorization
 - 2.13 Google sign-in with server-verified ID tokens
 - 2.14 Patient file upload with authenticated download
+- 2.15 Bruno API collection covering all current endpoints
+
+## Bruno API collection
+
+Open the [`bruno/`](bruno/) folder in Bruno and select the **Local** environment. Setup steps and request ordering are documented in [bruno/README.md](bruno/README.md).
 
 ## REST endpoints
 

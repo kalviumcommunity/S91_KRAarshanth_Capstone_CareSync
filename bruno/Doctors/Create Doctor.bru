@@ -1,0 +1,33 @@
+meta {
+  name: Create Doctor
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/doctors
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Dr Bruno Example",
+    "email": "bruno-doctor@example.com",
+    "specialization": "Cardiology",
+    "departmentId": "{{departmentId}}",
+    "availability": "Available"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setEnvVar("doctorId", res.body.data._id);
+}

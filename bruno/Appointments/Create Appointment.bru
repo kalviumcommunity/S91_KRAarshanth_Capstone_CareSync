@@ -1,0 +1,32 @@
+meta {
+  name: Create Appointment
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/appointments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "patientId": "{{patientId}}",
+    "doctorId": "{{doctorId}}",
+    "date": "2027-01-15T10:30:00.000Z",
+    "status": "Scheduled"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setEnvVar("appointmentId", res.body.data._id);
+}
