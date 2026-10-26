@@ -1,5 +1,5 @@
 import { Navigate, NavLink, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
-import { Activity, BedDouble, CalendarDays, Hospital, LayoutDashboard, LogOut, Menu, ShieldCheck, Stethoscope, Users, X } from 'lucide-react';
+import { Activity, BedDouble, CalendarDays, Files, Hospital, LayoutDashboard, LogOut, Menu, ShieldCheck, Stethoscope, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from './context/AuthContext';
 import Login from './pages/Login';
@@ -10,6 +10,7 @@ import Patients from './pages/Patients';
 import Departments from './pages/Departments';
 import Beds from './pages/Beds';
 import Appointments from './pages/Appointments';
+import FileUploads from './pages/FileUploads';
 import Unauthorized from './pages/Unauthorized';
 
 function ProtectedRoute() { const { user, loading } = useAuth(); if (loading) return <div className="screen-center">Loading IHROS…</div>; return user ? <Outlet /> : <Navigate to="/login" replace />; }
@@ -18,7 +19,7 @@ function RoleRoute({ roles }) { const { user } = useAuth(); return roles.include
 function Shell() {
   const { user, logout } = useAuth(); const [open, setOpen] = useState(false); const navigate = useNavigate();
   const links = [
-    ['/','Dashboard',LayoutDashboard], ['/doctors','Doctors',Stethoscope], ['/patients','Patients',Users], ['/departments','Departments',Hospital], ['/beds','Beds',BedDouble], ['/appointments','Appointments',CalendarDays]
+    ['/','Dashboard',LayoutDashboard], ['/doctors','Doctors',Stethoscope], ['/patients','Patients',Users], ['/files','Files',Files], ['/departments','Departments',Hospital], ['/beds','Beds',BedDouble], ['/appointments','Appointments',CalendarDays]
   ];
   const signOut = () => { logout(); navigate('/login'); };
   return <div className="app-shell">
@@ -35,7 +36,7 @@ function Shell() {
 export default function App() { return <Routes>
   <Route path="/login" element={<Login/>}/><Route path="/register" element={<Register/>}/><Route path="/unauthorized" element={<Unauthorized/>}/>
   <Route element={<ProtectedRoute/>}><Route element={<Shell/>}>
-    <Route path="/" element={<Dashboard/>}/><Route path="/doctors" element={<Doctors/>}/><Route path="/patients" element={<Patients/>}/><Route path="/departments" element={<Departments/>}/><Route path="/beds" element={<Beds/>}/><Route path="/appointments" element={<Appointments/>}/>
+    <Route path="/" element={<Dashboard/>}/><Route path="/doctors" element={<Doctors/>}/><Route path="/patients" element={<Patients/>}/><Route path="/files" element={<FileUploads/>}/><Route path="/departments" element={<Departments/>}/><Route path="/beds" element={<Beds/>}/><Route path="/appointments" element={<Appointments/>}/>
     <Route element={<RoleRoute roles={['super_admin','hospital_admin']}/>}><Route path="/admin" element={<Dashboard/>}/></Route>
   </Route></Route>
   <Route path="*" element={<Navigate to="/" replace/>}/>

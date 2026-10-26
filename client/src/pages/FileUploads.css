@@ -1,0 +1,30 @@
+.file-upload-form {
+  display: grid;
+  grid-template-columns: minmax(190px, .8fr) minmax(240px, 1.3fr) auto;
+  align-items: end;
+  gap: 14px;
+}
+
+.file-upload-form input[type="file"] {
+  padding: 8px;
+}
+
+.file-list-panel {
+  margin-top: 14px;
+}
+
+.alert.success {
+  padding: 11px 13px;
+  margin-bottom: 15px;
+  border: 1px solid #cce8dc;
+  border-radius: 9px;
+  background: #eef8f3;
+  color: #146b55;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .file-upload-form {
+    grid-template-columns: 1fr;
+  }
+}

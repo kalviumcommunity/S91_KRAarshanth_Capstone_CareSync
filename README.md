@@ -1,9 +1,9 @@
 # IHROS — Intelligent Hospital Resource Optimization System
-> Current project package includes work through KRA 2.12: GitHub setup, React initialization, React component development, Mongoose database schema design, database read/write operations, GET APIs, POST APIs, PUT APIs, React update/delete functionality, entity relationships, username/password authentication, and JWT authorization.
+> Current project package includes work through KRA 2.14, including Google authentication and patient file uploads.
 
 ## Capstone
 
-IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The first implementation milestone covers the Kalvium capstone requirements through **Username & Password Authentication** and **JWT-Based Authorization**.
+IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The implementation includes **Google Third-Party Authentication**, **JWT-Based Authorization**, and **Patient File Uploads**.
 
 ### Problem
 Hospitals experience resource bottlenecks when patient demand, doctor availability and facility capacity do not match. IHROS creates a single operational data layer that can later power forecasting, bottleneck detection and resource recommendations.
@@ -37,6 +37,8 @@ MongoDB
 - 2.10 Entity relationships in the data model / operational domain
 - 2.11 Username/password authentication with bcrypt
 - 2.12 JWT-based authentication + role-based authorization
+- 2.13 Google sign-in with server-verified ID tokens
+- 2.14 Patient file upload with authenticated download
 
 ## REST endpoints
 
@@ -50,6 +52,9 @@ MongoDB
 | PUT | `/api/doctors/:id` | Admin / Manager |
 | DELETE | `/api/doctors/:id` | Super Admin / Hospital Admin |
 | GET/POST/PUT/DELETE | `/api/patients...` | JWT / RBAC |
+| POST | `/api/patients/:patientId/files` | Admin / Manager + multipart file |
+| GET | `/api/patients/:patientId/files` | JWT |
+| GET | `/api/patients/:patientId/files/:fileId/download` | JWT |
 | GET/POST/PUT/DELETE | `/api/departments...` | JWT / RBAC |
 | GET/POST/PUT/DELETE | `/api/beds...` | JWT / RBAC |
 | GET/POST/PUT/DELETE | `/api/appointments...` | JWT / RBAC |
