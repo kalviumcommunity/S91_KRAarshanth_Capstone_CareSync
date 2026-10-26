@@ -14,3 +14,5 @@
 | 2.10 Relationships | [Mongoose entity references](KRA_2_10_ENTITY_RELATIONSHIPS.md) |
 | 2.11 Username/password | [Register/login + bcrypt](KRA_2_11_USERNAME_PASSWORD_AUTH.md) |
 | 2.12 JWT | [JWT issuance, verification and RBAC](KRA_2_12_JWT_AUTHORIZATION.md) |
+| 2.13 Third-party authentication | [Google sign-in with verified ID tokens](KRA_2_13_THIRD_PARTY_AUTH.md) |
+| 2.14 File upload | [Patient file upload and authenticated downloads](KRA_2_14_FILE_UPLOAD.md) |
