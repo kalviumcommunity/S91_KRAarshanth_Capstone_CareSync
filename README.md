@@ -109,6 +109,10 @@ npm run dev
 Frontend: `http://localhost:5173`  
 API: `http://localhost:5000`
 
+## Backend deployment
+
+Deploy the API to Render from the root [render.yaml](render.yaml) Blueprint. Configure the production MongoDB URI, frontend origin, and Google OAuth client ID in Render; see [KRA_2_16_BACKEND_DEPLOYMENT.md](docs/KRA_2_16_BACKEND_DEPLOYMENT.md) for setup and free-tier file-storage limitations.
+
 ### Demo account
 
 Register a hospital admin from `/register`, or seed one manually in MongoDB. Self-registration cannot create `super_admin` accounts.
