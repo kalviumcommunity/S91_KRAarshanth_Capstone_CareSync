@@ -1,0 +1,23 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import { apiLimiter } from './middleware/rateLimit.js';
+import authRoutes from './routes/auth.js';
+import crudRoutes from './routes/crud.js';
+import dashboardRoutes from './routes/dashboard.js';
+import { notFound, errorHandler } from './middleware/errorHandler.js';
+
+const app = express();
+app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+app.get('/api/health', (req, res) => res.json({ success: true, service: 'IHROS API', status: 'healthy' }));
+app.use('/api', apiLimiter);
+app.use('/api/auth', authRoutes);
+app.use('/api', crudRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use(notFound);
+app.use(errorHandler);
+export default app;
