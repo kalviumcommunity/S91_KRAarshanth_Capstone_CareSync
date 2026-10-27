@@ -47,3 +47,13 @@ DELETE /api/doctors with a manager token -> HTTP 403
 ```
 
 The verification uses temporary users and records, then removes them from MongoDB.
+
+## Automated JWT Coverage
+
+Run the focused integration tests from the repository root:
+
+```sh
+npm run test --workspace server -- --runTestsByPath tests/jwtAuthorization.test.js
+```
+
+The tests verify that registration issues a signed, expiring HS256 token; a valid token restores the active user on `GET /api/auth/me`; missing, malformed, and expired tokens receive HTTP 401; and an authenticated nurse attempting an admin-only role change receives HTTP 403. User records created by the tests are removed afterward.
