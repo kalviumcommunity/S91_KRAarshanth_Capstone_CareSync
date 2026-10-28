@@ -1,4 +1,4 @@
-import { Plus, Pencil, Trash2, RefreshCw } from 'lucide-react';
+import { Plus, Pencil, Trash2, RefreshCw, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -15,6 +15,8 @@ export default function CrudPage({ title, endpoint, fields }) {
   const [editing, setEditing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiError, setAiError] = useState('');
   const [error, setError] = useState('');
 
   const load = () => {
@@ -30,6 +32,23 @@ export default function CrudPage({ title, endpoint, fields }) {
   const reset = () => {
     setForm({});
     setEditing(null);
+    setAiError('');
+  };
+
+  const suggestDepartmentSpecialty = async () => {
+    setAiBusy(true);
+    setAiError('');
+    try {
+      const response = await api.post('/ai/autocomplete', {
+        departmentName: form.name ?? '',
+        prefix: form.specialty ?? '',
+      });
+      setForm((current) => ({ ...current, specialty: response.data.suggestion }));
+    } catch (err) {
+      setAiError(err.response?.data?.message || 'Could not generate an AI suggestion');
+    } finally {
+      setAiBusy(false);
+    }
   };
 
   const submit = async (event) => {
@@ -78,17 +97,38 @@ export default function CrudPage({ title, endpoint, fields }) {
           {canUpdate ? (
             <form onSubmit={submit} className="crud-form">
               {fields.map(([key, label, type]) => (
-                <label className="field" key={key}>
-                  <span>{label}</span>
-                  <input
-                    type={type}
-                    value={form[key] ?? ''}
-                    onChange={(event) => setForm({ ...form, [key]: type === 'number' ? Number(event.target.value) : event.target.value })}
-                    required
-                  />
-                </label>
+                <div className="field" key={key}>
+                  <label htmlFor={`${endpoint}-${key}`}><span>{label}</span></label>
+                  {type === 'textarea' ? (
+                    <textarea
+                      id={`${endpoint}-${key}`}
+                      rows={3}
+                      value={form[key] ?? ''}
+                      onChange={(event) => setForm({ ...form, [key]: event.target.value })}
+                      required
+                    />
+                  ) : (
+                    <input
+                      id={`${endpoint}-${key}`}
+                      type={type}
+                      value={form[key] ?? ''}
+                      onChange={(event) => setForm({ ...form, [key]: type === 'number' ? Number(event.target.value) : event.target.value })}
+                      required
+                    />
+                  )}
+                  {endpoint === 'departments' && key === 'specialty' && (
+                    <>
+                      <button type="button" className="secondary ai-suggest" onClick={suggestDepartmentSpecialty} disabled={aiBusy || !form.name?.trim()}>
+                        <Sparkles size={15} />
+                        {aiBusy ? 'Generating…' : 'AI autocomplete'}
+                      </button>
+                      <small>Uses only the department name and this text. Do not enter patient information.</small>
+                      {aiError && <small className="ai-error" role="alert">{aiError}</small>}
+                    </>
+                  )}
+                </div>
               ))}
-              <button className="primary" disabled={busy}>
+              <button className="primary" disabled={busy || aiBusy}>
                 <Plus size={17} />
                 {busy ? 'Saving…' : editing ? 'Update record' : 'Create record'}
               </button>
