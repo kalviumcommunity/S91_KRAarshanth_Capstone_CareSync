@@ -2,6 +2,15 @@
 
 The repository root includes a Render Blueprint in `render.yaml`. It configures the Node web service to install the monorepo lockfile with `npm ci`, start the Express API with `npm run start --workspace server`, and use `/api/health` for health checks.
 
+## Current deployment
+
+- API: [https://ihros-api.onrender.com](https://ihros-api.onrender.com)
+- Health check: [https://ihros-api.onrender.com/api/health](https://ihros-api.onrender.com/api/health)
+- Frontend origin allowed by CORS: `https://gleeful-bombolone-7b9dcd.netlify.app`
+- Frontend API base URL: `https://ihros-api.onrender.com/api`
+
+The Render deploy completed and its logs show MongoDB connected and successful `GET /api/health` responses. Google sign-in is not configured in the current deployment; set matching `GOOGLE_CLIENT_ID` on Render and `VITE_GOOGLE_CLIENT_ID` on Netlify to enable it.
+
 ## Deploy
 
 1. Push the repository to GitHub and sign in to [Render](https://dashboard.render.com/) with your account.
