@@ -234,6 +234,15 @@ The repository includes a `netlify.toml` with the Vite build command, publish di
 
 Live frontend: [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-bombolone-7b9dcd.netlify.app/)
 
+### KRA 2.17 submission evidence
+
+- **Deployed frontend:** [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-bombolone-7b9dcd.netlify.app/)
+- **Public access:** verified on 2026-10-29; an unauthenticated request returned HTTP 200 and the login page loaded.
+- **Netlify build:** `npm run build --workspace client`
+- **Publish directory:** `client/dist`
+- **SPA routing:** `netlify.toml` includes the fallback needed for React Router routes.
+- **Walkthrough video:** add the Google Drive URL after recording. For this lesson, record at least 3 minutes with camera on and the entire screen shared; show the public frontend, Netlify build/publish settings, the README deployment link, and a working page refresh. Set the Drive sharing permission to "Anyone with the link can edit" as specified by the lesson.
+
 1. The backend is deployed at `https://ihros-api.onrender.com`.
 2. In Netlify, choose **Add new site → Import an existing project** and connect this GitHub repository. Keep the base directory at the repository root; the build settings are read from `netlify.toml`.
 3. In the Netlify site settings, add the environment variable `VITE_API_URL` with the value `https://ihros-api.onrender.com/api`. Trigger a new deploy after adding or changing the variable.
