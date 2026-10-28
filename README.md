@@ -117,6 +117,8 @@ Deploy the API to Render from the root [render.yaml](render.yaml) Blueprint. Con
 
 The repository includes a `netlify.toml` with the Vite build command, publish directory, and SPA fallback needed by React Router.
 
+Live frontend: [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-bombolone-7b9dcd.netlify.app/)
+
 1. Deploy the backend first and note its public URL (for example, `https://ihros-api.onrender.com`).
 2. In Netlify, choose **Add new site → Import an existing project** and connect this GitHub repository. Keep the base directory at the repository root; the build settings are read from `netlify.toml`.
 3. In the Netlify site settings, add the environment variable `VITE_API_URL` with the value `https://<your-backend-host>/api` (replace the example host with the deployed backend URL). Trigger a new deploy after adding or changing the variable.
