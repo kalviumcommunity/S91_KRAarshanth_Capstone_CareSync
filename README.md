@@ -119,6 +119,14 @@ npm run test --workspace server
 
 The tests cover the health endpoint, authentication and authorization, Google sign-in, and patient file uploads. MongoDB-backed tests use `MONGO_TEST_URI` when set, or `mongodb://127.0.0.1:27017/ihros_test` by default.
 
+## AI department specialty autocomplete
+
+The Departments form can generate a concise specialty description from the department name and optional text already entered. The authenticated API sends only those two fields to OpenAI; do not enter patient information. Suggestions remain editable and are not saved until the user submits the form.
+
+To enable it locally, set `OPENAI_API_KEY` in `server/.env`. The optional `OPENAI_MODEL` setting defaults to `gpt-4o-mini`. Keep the key on the server; never add it to frontend environment variables or commit it. The route returns a clear configuration error when the key is missing.
+
+For the deployed API, add `OPENAI_API_KEY` (and optionally `OPENAI_MODEL`) in the `ihros-api` Render service's environment settings. Render restarts the service after the change; no frontend secret or deployment is needed.
+
 ## Run with Docker
 
 Docker Compose runs the API and MongoDB together. Create `server/.env` from the example, then set a unique `JWT_SECRET` before starting:
@@ -128,6 +136,7 @@ Copy-Item server/.env.example server/.env
 ```
 
 In `server/.env`, replace the example `JWT_SECRET` with a strong random secret. Compose configures the API to connect to its MongoDB container, so the `MONGO_URI` value in this file is overridden.
+To enable AI autocomplete in Docker, also set `OPENAI_API_KEY` in `server/.env`; the model setting is optional.
 
 Build and start the application:
 

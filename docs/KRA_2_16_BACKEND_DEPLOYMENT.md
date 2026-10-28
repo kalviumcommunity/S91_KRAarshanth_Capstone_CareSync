@@ -11,6 +11,8 @@ The repository root includes a Render Blueprint in `render.yaml`. It configures 
 
 The Render deploy completed and its logs show MongoDB connected and successful `GET /api/health` responses. Google sign-in is not configured in the current deployment; set matching `GOOGLE_CLIENT_ID` on Render and `VITE_GOOGLE_CLIENT_ID` on Netlify to enable it.
 
+The department specialty AI autocomplete requires the optional `OPENAI_API_KEY` environment variable on the API service. Keep it server-side; never add it to Netlify or the frontend. The feature remains unavailable until the key is configured.
+
 ## Deploy
 
 1. Push the repository to GitHub and sign in to [Render](https://dashboard.render.com/) with your account.
