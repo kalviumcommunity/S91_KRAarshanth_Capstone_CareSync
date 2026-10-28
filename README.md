@@ -119,6 +119,24 @@ npm run test --workspace server
 
 The tests cover the health endpoint, authentication and authorization, Google sign-in, and patient file uploads. MongoDB-backed tests use `MONGO_TEST_URI` when set, or `mongodb://127.0.0.1:27017/ihros_test` by default.
 
+## Run with Docker
+
+Docker Compose runs the API and MongoDB together. Create `server/.env` from the example, then set a unique `JWT_SECRET` before starting:
+
+```powershell
+Copy-Item server/.env.example server/.env
+```
+
+In `server/.env`, replace the example `JWT_SECRET` with a strong random secret. Compose configures the API to connect to its MongoDB container, so the `MONGO_URI` value in this file is overridden.
+
+Build and start the application:
+
+```bash
+docker compose up --build
+```
+
+The API is available at `http://localhost:5000`, and its health endpoint is `http://localhost:5000/api/health`. Uploaded files and MongoDB data are stored in Docker volumes. Stop the services with `docker compose down`; add `--volumes` only if you intend to delete that stored data. The API container runs as the non-root `node` user and includes a Docker health check.
+
 ## Backend deployment
 
 The API is deployed on Render: [https://ihros-api.onrender.com](https://ihros-api.onrender.com). Its health endpoint is [https://ihros-api.onrender.com/api/health](https://ihros-api.onrender.com/api/health).
