@@ -1,12 +1,33 @@
 # IHROS — Intelligent Hospital Resource Optimization System
-> Current project package includes work through KRA 2.14, including Google authentication and patient file uploads.
 
-## Capstone
+IHROS is a hospital resource management application for organizing doctors, patients, departments, beds, and appointments. It provides authenticated workflows for hospital staff and a dashboard for reviewing operational data.
 
-IHROS is an operational intelligence platform for hospital resource planning. It models doctors, patients, departments, beds and appointments and exposes secure REST APIs backed by MongoDB. The implementation includes **Google Third-Party Authentication**, **JWT-Based Authorization**, and **Patient File Uploads**.
+## Problem statement
 
-### Problem
-Hospitals experience resource bottlenecks when patient demand, doctor availability and facility capacity do not match. IHROS creates a single operational data layer that can later power forecasting, bottleneck detection and resource recommendations.
+Hospitals need a reliable way to keep resource and appointment information organized so staff can coordinate patient care and facility capacity.
+
+## Proposed solution
+
+IHROS provides a React interface and a REST API backed by MongoDB. Staff can manage hospital resources in one application, with authentication and role-based permissions protecting sensitive workflows.
+
+## Technology stack
+
+- Frontend: React, Vite, Axios
+- Backend: Node.js, Express
+- Database: MongoDB, Mongoose
+- Authentication: JWT, bcrypt, optional Google sign-in
+- Testing: Jest, Supertest
+- AI assistance: server-side OpenAI API integration for department specialty suggestions
+- Deployment: Netlify (frontend), Render (backend), Docker Compose (local API and database)
+
+## Key features
+
+- Dashboard and CRUD workflows for doctors, patients, departments, beds, and appointments
+- Username/password authentication, JWT-protected APIs, and role-based authorization
+- Optional Google sign-in and authenticated patient file uploads
+- Jest and Supertest API tests
+- Dockerized API and MongoDB development environment
+- Authenticated AI assistance for editable department specialty descriptions
 
 ## Architecture
 
@@ -40,6 +61,19 @@ MongoDB
 - 2.13 Google sign-in with server-verified ID tokens
 - 2.14 Patient file upload with authenticated download
 - 2.15 Bruno API collection covering all current endpoints
+- 2.16 Render backend deployment
+- 2.17 Netlify frontend deployment configuration
+- 2.18 Jest and Supertest API tests
+- 2.19 Docker support for the API
+- 2.20 AI-assisted department specialty autocomplete
+
+## Live deployments
+
+- Frontend: [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-bombolone-7b9dcd.netlify.app/)
+- Backend: [https://ihros-api.onrender.com](https://ihros-api.onrender.com)
+- Backend health endpoint: [https://ihros-api.onrender.com/api/health](https://ihros-api.onrender.com/api/health)
+
+**Deployment check before submission:** at the last anonymous request, Netlify returned HTTP 401 because project access was set to Private. Change the project's live access to Public in Netlify and confirm the frontend opens in a signed-out/incognito browser. The backend health endpoint also needs to be verified from your own network before submitting.
 
 ## Bruno API collection
 
@@ -164,7 +198,14 @@ Live frontend: [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-b
 4. Once Netlify assigns the site URL, set the backend's `CLIENT_URL` environment variable to that exact origin (for example, `https://<your-site>.netlify.app`) and redeploy/restart the backend. The API's CORS policy allows this configured origin.
 5. Open the deployed site, refresh a nested route such as `/login`, and verify that login and API-backed pages can reach the deployed backend.
 
-For a deployment walkthrough video, show the Netlify build settings (build command `npm run build --workspace client`, publish directory `client/dist`), the `VITE_API_URL` configuration without exposing secrets, and the deployed site. Follow the assignment's requirements for a 3+ minute recording, camera on, entire screen shared, and the requested link permissions.
+For the required final walkthrough, record at least 3 minutes with your camera on and your entire screen shared. Demonstrate the application workflows and explain the deployment. If also discussing the Netlify setup, show the build command (`npm run build --workspace client`), publish directory (`client/dist`), and `VITE_API_URL` without exposing secrets. Share the recording with the access required by the assignment and add its URL to the final PR before submission.
+
+## Final submission checklist
+
+- [ ] Confirm the frontend and backend links work in a signed-out browser.
+- [ ] Add `OPENAI_API_KEY` privately to the Render service if the deployed AI autocomplete should be enabled. Never put this key in the frontend or this repository.
+- [ ] Record and link the required walkthrough video in the final PR.
+- [ ] Be ready to explain the architecture, implementation decisions, challenges, and lessons learned.
 
 ### Demo account
 
