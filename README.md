@@ -113,6 +113,18 @@ API: `http://localhost:5000`
 
 Deploy the API to Render from the root [render.yaml](render.yaml) Blueprint. Configure the production MongoDB URI, frontend origin, and Google OAuth client ID in Render; see [KRA_2_16_BACKEND_DEPLOYMENT.md](docs/KRA_2_16_BACKEND_DEPLOYMENT.md) for setup and free-tier file-storage limitations.
 
+## Deploy the frontend to Netlify
+
+The repository includes a `netlify.toml` with the Vite build command, publish directory, and SPA fallback needed by React Router.
+
+1. Deploy the backend first and note its public URL (for example, `https://ihros-api.onrender.com`).
+2. In Netlify, choose **Add new site → Import an existing project** and connect this GitHub repository. Keep the base directory at the repository root; the build settings are read from `netlify.toml`.
+3. In the Netlify site settings, add the environment variable `VITE_API_URL` with the value `https://<your-backend-host>/api` (replace the example host with the deployed backend URL). Trigger a new deploy after adding or changing the variable.
+4. Once Netlify assigns the site URL, set the backend's `CLIENT_URL` environment variable to that exact origin (for example, `https://<your-site>.netlify.app`) and redeploy/restart the backend. The API's CORS policy allows this configured origin.
+5. Open the deployed site, refresh a nested route such as `/login`, and verify that login and API-backed pages can reach the deployed backend.
+
+For a deployment walkthrough video, show the Netlify build settings (build command `npm run build --workspace client`, publish directory `client/dist`), the `VITE_API_URL` configuration without exposing secrets, and the deployed site. Follow the assignment's requirements for a 3+ minute recording, camera on, entire screen shared, and the requested link permissions.
+
 ### Demo account
 
 Register a hospital admin from `/register`, or seed one manually in MongoDB. Self-registration cannot create `super_admin` accounts.
