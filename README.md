@@ -109,6 +109,16 @@ npm run dev
 Frontend: `http://localhost:5173`  
 API: `http://localhost:5000`
 
+## Run backend tests
+
+The backend uses Jest and Supertest for automated API tests. Run the full suite from the repository root:
+
+```bash
+npm run test --workspace server
+```
+
+The tests cover the health endpoint, authentication and authorization, Google sign-in, and patient file uploads. MongoDB-backed tests use `MONGO_TEST_URI` when set, or `mongodb://127.0.0.1:27017/ihros_test` by default.
+
 ## Backend deployment
 
 The API is deployed on Render: [https://ihros-api.onrender.com](https://ihros-api.onrender.com). Its health endpoint is [https://ihros-api.onrender.com/api/health](https://ihros-api.onrender.com/api/health).
