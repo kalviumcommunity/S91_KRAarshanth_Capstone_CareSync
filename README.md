@@ -95,7 +95,7 @@ The client uses Axios to call the Express REST API. Authentication, authorizatio
 - Backend: [https://ihros-api.onrender.com](https://ihros-api.onrender.com)
 - Backend health endpoint: [https://ihros-api.onrender.com/api/health](https://ihros-api.onrender.com/api/health)
 
-**Deployment verification status:** Netlify live access is now Public; an anonymous request returned HTTP 200 and the login page loaded. The latest request to the Render health endpoint could not be completed from this environment (connection reset), so API, authentication, and end-to-end workflows still need verification from your network before final submission. Google sign-in is currently unavailable on the deployed frontend until its OAuth client ID is configured.
+**Deployment verification status:** Netlify live access is now Public; an anonymous request returned HTTP 200 and the login page loaded. The Render dashboard reports the latest deploy as Live, MongoDB connected, and internal `/api/health` checks returning HTTP 200. External requests from this environment reset during TLS connection, so verify the health endpoint and end-to-end workflows from your network before final submission. Google sign-in is currently unavailable on the deployed frontend until its OAuth client ID is configured.
 
 ## Bruno API collection
 
