@@ -29,7 +29,7 @@ IHROS provides a React interface and a REST API backed by MongoDB. Staff can man
 - Dockerized API and MongoDB development environment
 - Authenticated AI assistance for editable department specialty descriptions
 
-## Architecture
+## Architecture Overview
 
 ```text
 React + Vite
@@ -42,6 +42,28 @@ Mongoose ODM
    │
    ▼
 MongoDB
+```
+
+The client uses Axios to call the Express REST API. Authentication, authorization, request validation, and rate limiting are enforced by backend middleware. Mongoose maps application data to MongoDB.
+
+## Folder structure
+
+```text
+.
+├── bruno/                  # Bruno API collection and local environment
+├── client/
+│   ├── src/                 # React pages, components, and styles
+│   └── .env.example         # Vite client configuration template
+├── docs/                    # KRA, API, and data-model documentation
+├── server/
+│   ├── src/                 # Express application, routes, models, middleware
+│   ├── tests/               # Jest and Supertest API tests
+│   └── .env.example         # Backend configuration template
+├── Dockerfile
+├── docker-compose.yml
+├── netlify.toml
+├── render.yaml
+└── package.json             # npm workspaces and root scripts
 ```
 
 ## Implemented milestones
@@ -73,7 +95,7 @@ MongoDB
 - Backend: [https://ihros-api.onrender.com](https://ihros-api.onrender.com)
 - Backend health endpoint: [https://ihros-api.onrender.com/api/health](https://ihros-api.onrender.com/api/health)
 
-**Deployment check before submission:** at the last anonymous request, Netlify returned HTTP 401 because project access was set to Private. Change the project's live access to Public in Netlify and confirm the frontend opens in a signed-out/incognito browser. The backend health endpoint also needs to be verified from your own network before submitting.
+**Deployment verification status:** Netlify live access is now Public; an anonymous request returned HTTP 200 and the login page loaded. The latest request to the Render health endpoint could not be completed from this environment (connection reset), so API, authentication, and end-to-end workflows still need verification from your network before final submission. Google sign-in is currently unavailable on the deployed frontend until its OAuth client ID is configured.
 
 ## Bruno API collection
 
@@ -108,33 +130,47 @@ Open the [`bruno/`](bruno/) folder in Bruno and select the **Local** environment
 - `authenticate` middleware verifies the token and loads the user.
 - `authorize(...)` middleware enforces role permissions.
 
-## Run locally
+## Installation Instructions
 
-### 1. Requirements
+### Requirements
 - Node.js 20+
-- MongoDB running locally, or a MongoDB connection string
+- MongoDB running locally, or a MongoDB Atlas connection string
+- npm (included with Node.js)
 
-### 2. Install
+Clone the repository and install workspace dependencies from the repository root:
 
-```bash
-npm install
-npm install --workspace client
-npm install --workspace server
+```powershell
+git clone https://github.com/kalviumcommunity/S91_KRAarshanth_Capstone_CareSync.git
+Set-Location S91_KRAarshanth_Capstone_CareSync
+npm ci
 ```
 
-### 3. Configure server
+## Environment Setup
 
-Copy `server/.env.example` to `server/.env` and set a strong `JWT_SECRET`.
+Create the backend environment file from the template:
 
-```env
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/ihros
-JWT_SECRET=your-long-random-secret
-JWT_EXPIRES_IN=1d
-CLIENT_URL=http://localhost:5173
+```powershell
+Copy-Item server/.env.example server/.env
 ```
 
-### 4. Start
+Set at least these values in `server/.env`:
+
+- `MONGO_URI`: local MongoDB URI or MongoDB Atlas connection string
+- `JWT_SECRET`: unique, strong secret of at least 32 characters
+- `CLIENT_URL`: frontend origin, usually `http://localhost:5173` locally
+- `PORT`: API port; defaults to `5000`
+
+Optional integrations:
+
+- Google sign-in: set `GOOGLE_CLIENT_ID` in `server/.env` and `VITE_GOOGLE_CLIENT_ID` in `client/.env` to the same OAuth web client ID. Create `client/.env` from `client/.env.example` if enabling this locally.
+- AI specialty suggestions: set `OPENAI_API_KEY` in `server/.env`. Keep the key server-side; never commit it or add it to the frontend.
+- Tests: set `MONGO_TEST_URI` only if you want to use a separate disposable MongoDB test database; otherwise tests default to `mongodb://127.0.0.1:27017/ihros_test`.
+
+Never commit `.env` files or real credentials. The checked-in `.env.example` files contain placeholders only.
+
+## Running the Project
+
+Start MongoDB, then run both application workspaces from the repository root:
 
 ```bash
 npm run dev
@@ -142,6 +178,12 @@ npm run dev
 
 Frontend: `http://localhost:5173`  
 API: `http://localhost:5000`
+
+Create a production frontend build with:
+
+```bash
+npm run build
+```
 
 ## Run backend tests
 
@@ -198,20 +240,37 @@ Live frontend: [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-b
 4. Once Netlify assigns the site URL, set the backend's `CLIENT_URL` environment variable to that exact origin (for example, `https://<your-site>.netlify.app`) and redeploy/restart the backend. The API's CORS policy allows this configured origin.
 5. Open the deployed site, refresh a nested route such as `/login`, and verify that login and API-backed pages can reach the deployed backend.
 
-For the required final walkthrough, record at least 3 minutes with your camera on and your entire screen shared. Demonstrate the application workflows and explain the deployment. If also discussing the Netlify setup, show the build command (`npm run build --workspace client`), publish directory (`client/dist`), and `VITE_API_URL` without exposing secrets. Share the recording with the access required by the assignment and add its URL to the final PR before submission.
+For the required final walkthrough, record 5–8 minutes with your camera on and your entire screen shared. Demonstrate the live application, major workflows, repository structure, README, architecture decisions, challenges, and lessons learned. Upload the video to Google Drive, set access to "Anyone with the link can view", and test it in an incognito browser. Add the public URL to the final PR before submission.
 
 ## Final submission checklist
 
 - [ ] Confirm the frontend and backend links work in a signed-out browser.
 - [ ] Add `OPENAI_API_KEY` privately to the Render service if the deployed AI autocomplete should be enabled. Never put this key in the frontend or this repository.
-- [ ] Record and link the required walkthrough video in the final PR.
+- [ ] Record a 5–8 minute walkthrough with your camera on and the entire screen shared.
+- [ ] Upload the video to Google Drive, set access to "Anyone with the link can view", and test the link in an incognito browser.
+- [ ] Add the public video URL to the final PR and the README.
 - [ ] Be ready to explain the architecture, implementation decisions, challenges, and lessons learned.
+
+### Walkthrough video
+
+**Video URL:** add the publicly accessible Google Drive link after recording; no video has been recorded for this submission yet.
+
+## Future Improvements
+
+- Add persistent object storage for patient uploads in production deployments.
+- Enable and verify Google OAuth on the deployed frontend and backend.
+- Add frontend component and end-to-end tests for critical hospital workflows.
+- Expand the dashboard with validated operational trends and resource-planning insights.
+
+## Contributors
+
+- K R Aarshanth
 
 ### Demo account
 
 Register a hospital admin from `/register`, or seed one manually in MongoDB. Self-registration cannot create `super_admin` accounts.
 
-## Git workflow for each KRA
+## Earlier KRA Git workflow example
 
 ```bash
 git checkout -b feat/2-12-jwt-authorization
@@ -220,7 +279,7 @@ git commit -m "feat(auth): add JWT authorization and RBAC"
 git push -u origin feat/2-12-jwt-authorization
 ```
 
-Create the PR, add the required Kalvium review comment, record the required demo video, merge the PR, and keep `main` as the default branch.
+That example reflects the workflow used for earlier milestones. For this final assignment, use `feature/final-project-submission` as the PR branch and leave the PR open and unmerged, targeting `main`.
 
 ## Suggested demo order
 
