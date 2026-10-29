@@ -77,16 +77,41 @@ test('Google sign-in rejects unverified email claims and invalid credentials', a
   expect(await User.countDocuments()).toBe(0);
 });
 
-test('Google sign-in does not silently link an existing password account', async () => {
-  await User.create({
+test('Google sign-in links a matching verified email and preserves the existing role', async () => {
+  const existingUser = await User.create({
     name: 'Existing User',
     email: validProfile.email,
     password: 'valid-test-password',
+    role: 'hospital_admin',
   });
   verifyGoogleCredential.mockResolvedValue(validProfile);
 
   const response = await googleSignIn();
+  expect(response.status).toBe(200);
+  expect(response.body.user).toMatchObject({
+    id: existingUser.id,
+    email: validProfile.email,
+    role: 'hospital_admin',
+  });
+  expect(response.body.token).toEqual(expect.any(String));
+
+  const linkedUser = await User.findById(existingUser.id).select('+password');
+  expect(linkedUser.googleId).toBe(validProfile.sub);
+  expect(linkedUser.password).toEqual(expect.any(String));
+  expect(await User.countDocuments()).toBe(1);
+});
+
+test('Google sign-in does not replace a different Google identity already linked to the email', async () => {
+  await User.create({
+    name: 'Existing User',
+    email: validProfile.email,
+    googleId: 'another-google-user',
+  });
+  verifyGoogleCredential.mockResolvedValue(validProfile);
+
+  const response = await googleSignIn();
+
   expect(response.status).toBe(409);
-  expect(response.body.message).toMatch(/sign in with your password/i);
+  expect(response.body.message).toMatch(/different Google account/i);
   expect(await User.countDocuments()).toBe(1);
 });

@@ -16,7 +16,8 @@ The client uses Google Identity Services to receive an ID credential. It sends t
 - Google accounts must have a verified email address.
 - First-time Google sign-ins create nurse-level accounts; an administrator must grant elevated roles.
 - Existing Google identities sign in to the same account.
-- An email collision with an existing password account returns HTTP 409. Accounts are not automatically linked based only on matching email.
+- A verified Google identity with the same email as an existing account is linked automatically, allowing direct Google sign-in while preserving the existing account's role and password.
+- If that account is already linked to a different Google identity, sign-in returns HTTP 409 instead of replacing the link.
 - Google-only accounts do not have a local password; password login continues to use the existing email/password checks.
 - The API returns the same JWT and safe user profile shape used by the existing login flow.
 
@@ -30,4 +31,4 @@ The client uses Google Identity Services to receive an ID credential. It sends t
 
 Successful authentication returns HTTP 200 with a session JWT and user profile. Invalid credentials or unverified email claims return HTTP 401. A Google verification service outage is treated as a server error rather than as invalid user credentials.
 
-Automated API tests mock Google's token verification at the service boundary and cover account creation, repeat sign-in, unverified email, invalid credentials, and existing-account collisions.
+Automated API tests mock Google's token verification at the service boundary and cover account creation, repeat sign-in, verified-email linking, conflicting Google identities, unverified email, and invalid credentials.

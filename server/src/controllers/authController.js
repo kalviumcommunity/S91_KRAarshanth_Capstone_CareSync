@@ -44,12 +44,19 @@ export const googleLogin = asyncHandler(async (req, res) => {
   const email = profile.email.toLowerCase();
   let user = await User.findOne({ googleId: profile.sub });
   if (!user) {
-    if (await User.exists({ email })) {
-      throw new ApiError(409, 'An account with this email already exists. Sign in with your password instead.');
-    }
+    user = await User.findOne({ email });
+    if (user) {
+      if (!user.active) throw new ApiError(401, 'Invalid Google credential');
+      if (user.googleId && user.googleId !== profile.sub) {
+        throw new ApiError(409, 'This email is already linked to a different Google account.');
+      }
 
-    const name = (typeof profile.name === 'string' ? profile.name : 'Google User').trim().slice(0, 80) || 'Google User';
-    user = await User.create({ name, email, googleId: profile.sub, role: 'nurse' });
+      user.googleId = profile.sub;
+      await user.save();
+    } else {
+      const name = (typeof profile.name === 'string' ? profile.name : 'Google User').trim().slice(0, 80) || 'Google User';
+      user = await User.create({ name, email, googleId: profile.sub, role: 'nurse' });
+    }
   }
 
   if (!user.active) throw new ApiError(401, 'Invalid Google credential');
