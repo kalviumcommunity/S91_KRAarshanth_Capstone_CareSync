@@ -10,8 +10,9 @@ export default function CrudPage({ title, endpoint, fields }) {
   const { user } = useAuth();
   const canUpdate = ['super_admin', 'hospital_admin', 'department_manager'].includes(user?.role);
   const canDelete = ['super_admin', 'hospital_admin'].includes(user?.role);
+  const emptyForm = () => Object.fromEntries(fields.map(([key, , , , defaultValue]) => [key, defaultValue ?? '']));
   const [items, setItems] = useState([]);
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState(emptyForm);
   const [editing, setEditing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -30,7 +31,7 @@ export default function CrudPage({ title, endpoint, fields }) {
   useEffect(load, []);
 
   const reset = () => {
-    setForm({});
+    setForm(emptyForm());
     setEditing(null);
     setAiError('');
   };
@@ -61,7 +62,11 @@ export default function CrudPage({ title, endpoint, fields }) {
       reset();
       load();
     } catch (err) {
-      setError(err.response?.data?.message || 'Save failed');
+      const fieldErrors = err.response?.data?.errors;
+      const details = fieldErrors && Object.entries(fieldErrors)
+        .map(([field, message]) => `${field}: ${message}`)
+        .join('; ');
+      setError(details || err.response?.data?.message || 'Save failed');
     } finally {
       setBusy(false);
     }
@@ -96,7 +101,7 @@ export default function CrudPage({ title, endpoint, fields }) {
           </div>
           {canUpdate ? (
             <form onSubmit={submit} className="crud-form">
-              {fields.map(([key, label, type]) => (
+              {fields.map(([key, label, type, options]) => (
                 <div className="field" key={key}>
                   <label htmlFor={`${endpoint}-${key}`}><span>{label}</span></label>
                   {type === 'textarea' ? (
@@ -107,6 +112,15 @@ export default function CrudPage({ title, endpoint, fields }) {
                       onChange={(event) => setForm({ ...form, [key]: event.target.value })}
                       required
                     />
+                  ) : type === 'select' ? (
+                    <select
+                      id={`${endpoint}-${key}`}
+                      value={form[key] ?? ''}
+                      onChange={(event) => setForm({ ...form, [key]: event.target.value })}
+                      required
+                    >
+                      {options.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
                   ) : (
                     <input
                       id={`${endpoint}-${key}`}
