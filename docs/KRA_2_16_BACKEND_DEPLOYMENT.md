@@ -11,7 +11,7 @@ The repository root includes a Render Blueprint in `render.yaml`. It configures 
 
 The Render deploy completed and its logs show MongoDB connected and successful `GET /api/health` responses. Google sign-in is not configured in the current deployment; set matching `GOOGLE_CLIENT_ID` on Render and `VITE_GOOGLE_CLIENT_ID` on Netlify to enable it.
 
-The department specialty AI autocomplete requires the optional `OPENAI_API_KEY` environment variable on the API service. Keep it server-side; never add it to Netlify or the frontend. The feature remains unavailable until the key is configured.
+The department specialty AI autocomplete uses Gemini and requires the optional `GEMINI_API_KEY` environment variable on the API service. `GEMINI_MODEL` is optional and defaults to `gemini-flash-latest`. Keep the key server-side; never add it to Netlify or the frontend. The feature remains unavailable until the key is configured.
 
 ## Deploy
 
@@ -19,9 +19,10 @@ The department specialty AI autocomplete requires the optional `OPENAI_API_KEY` 
 2. Choose **New → Blueprint**, connect `kalviumcommunity/S91_KRAarshanth_Capstone_CareSync`, and select the `main` branch.
 3. Review the `ihros-api` service. The Blueprint uses the free web-service plan and generates a private `JWT_SECRET`.
 4. Enter the required `MONGO_URI` for your MongoDB Atlas database and `CLIENT_URL` for the deployed frontend origin. Enter the same Google OAuth web client ID used by the frontend as `GOOGLE_CLIENT_ID`.
-5. Deploy the Blueprint. Render runs the configured build and start commands; wait for the health check to pass.
-6. Verify `https://<your-render-service>.onrender.com/api/health` returns a healthy response.
-7. Configure the frontend's `VITE_API_URL` as `https://<your-render-service>.onrender.com/api`. Add the deployed frontend origin to Google OAuth's authorized JavaScript origins.
+5. To enable Gemini specialty suggestions, add `GEMINI_API_KEY` privately in the Render service environment; optionally set `GEMINI_MODEL`. Never put the provider key in Netlify or source control.
+6. Deploy the Blueprint. Render runs the configured build and start commands; wait for the health check to pass.
+7. Verify `https://<your-render-service>.onrender.com/api/health` returns a healthy response.
+8. Configure the frontend's `VITE_API_URL` as `https://<your-render-service>.onrender.com/api`. Add the deployed frontend origin to Google OAuth's authorized JavaScript origins.
 
 Never commit production environment values. Keep MongoDB network access restricted to the deployment's trusted outbound addresses where practical, and use synthetic patient data for demonstrations.
 
