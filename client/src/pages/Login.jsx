@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import GoogleSignIn from '../components/GoogleSignIn';
 
 export default function Login() {
-  const { user, login, googleLogin } = useAuth(); const navigate = useNavigate(); const location = useLocation(); const [form,setForm]=useState({email:'admin@ihros.local',password:'Admin@123'}); const [error,setError]=useState(''); const [busy,setBusy]=useState(false);
+  const { user, login, googleLogin } = useAuth(); const navigate = useNavigate(); const location = useLocation(); const [form,setForm]=useState({email:'',password:''}); const [error,setError]=useState(''); const [busy,setBusy]=useState(false);
   if (user) return <Navigate to="/" replace />;
   const submit=async(e)=>{e.preventDefault();setError('');setBusy(true);try{await login(form);navigate(location.state?.from?.pathname||'/');}catch(err){setError(err.response?.data?.message||'Login failed. Check your credentials.');}finally{setBusy(false);}};
   const submitGoogle=async(credential)=>{setError('');try{await googleLogin(credential);navigate(location.state?.from?.pathname||'/');}catch(err){setError(err.response?.data?.message||'Google sign-in failed. Please try again.');}};
