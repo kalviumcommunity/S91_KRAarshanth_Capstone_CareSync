@@ -2,6 +2,10 @@
 command = "npm run build --workspace client"
 publish = "client/dist"
 
+[build.environment]
+VITE_API_URL = "https://ihros-api.onrender.com/api"
+VITE_GOOGLE_CLIENT_ID = "555661466629-3r5tlq66lmqqlc2os5g6v9ibf23jf2n.apps.googleusercontent.com"
+
 [[redirects]]
 from = "/*"
 to = "/index.html"
