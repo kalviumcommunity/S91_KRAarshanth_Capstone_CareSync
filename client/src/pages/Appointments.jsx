@@ -1,1 +1,16 @@
-import CrudPage from './CrudPage'; export default function Appointments(){return <CrudPage title="Appointments" endpoint="appointments" fields={[['patientName','Patient name','text'],['doctorName','Doctor name','text'],['date','Date','date'],['status','Status','text']]}/>}
+import CrudPage from './CrudPage';
+
+export default function Appointments() {
+  return (
+    <CrudPage
+      title="Appointments"
+      endpoint="appointments"
+      fields={[
+        ['patientName', 'Patient name', 'text'],
+        ['doctorName', 'Doctor name', 'text'],
+        ['date', 'Date', 'date'],
+        ['status', 'Status', 'select', ['Scheduled', 'Completed', 'Cancelled', 'No-show'], 'Scheduled'],
+      ]}
+    />
+  );
+}
