@@ -65,7 +65,9 @@ export default function FileUploads() {
     const payload = new FormData();
     payload.append('file', selectedFile);
     try {
-      await api.post(`/patients/${patientId}/files`, payload);
+      await api.post(`/patients/${patientId}/files`, payload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       setSelectedFile(null);
       form.reset();
       setNotice('File uploaded successfully.');
