@@ -1,0 +1,53 @@
+.dashboard-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.dashboard-panel{min-width:0}
+.dashboard-panel .panel-title{margin-bottom:20px}
+.bed-status-section{margin-top:24px;padding-top:18px;border-top:1px solid #edf0f2}
+.bed-status-section h4,.department-capacity h4{margin:0 0 14px;font-size:12px;color:#425763}
+.bed-status-content{display:flex;align-items:center;gap:26px;min-height:174px}
+.bed-status-donut{width:156px;height:156px;flex:none;display:grid;place-items:center;border-radius:50%;position:relative}
+.bed-status-donut:before{content:"";position:absolute;inset:23px;border-radius:50%;background:#fff}
+.bed-status-donut>div{z-index:1;display:grid;text-align:center;gap:3px}
+.bed-status-donut strong{font-size:23px;color:#203744}
+.bed-status-donut span{font-size:10px;color:#82919a}
+.bed-status-legend{list-style:none;padding:0;margin:0;width:min(280px,100%);display:grid;gap:11px}
+.bed-status-legend li,.bed-status-label{display:flex;align-items:center}
+.bed-status-legend li{gap:10px;font-size:11px;color:#425763}
+.bed-status-label{gap:8px;flex:1}
+.bed-status-label i{width:9px;height:9px;border-radius:50%;flex:none}
+.bed-status-legend li strong{font-size:11px;color:#304854}
+.bed-status-legend li small{width:36px;text-align:right;font-size:10px;color:#82919a}
+.department-capacity{margin-top:24px}
+.department-capacity h4,.upcoming-section h4{display:flex;align-items:center;gap:7px;margin:0 0 13px;font-size:12px;color:#425763}
+.department-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.8fr);align-items:center;gap:14px;padding:10px 0;border-top:1px solid #edf0f2}
+.department-label{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11px;font-weight:700;color:#334a56}
+.department-label small{font-size:10px;font-weight:400;color:#82919a;text-align:right}
+.department-meter,.activity-bar-wrap{height:8px;overflow:hidden;border-radius:20px;background:#edf1f3}
+.department-meter>div{height:100%;border-radius:20px;background:#279879}
+.activity-chart{height:142px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;align-items:end;border-bottom:1px solid #e8edef}
+.activity-day{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;color:#81909a;font-size:10px}
+.activity-day strong{font-size:10px;color:#425763}
+.activity-bar-wrap{width:min(28px,75%);height:90px;display:flex;align-items:flex-end;background:transparent}
+.activity-bar{width:100%;min-height:4px;border-radius:5px 5px 0 0;background:#58ab91}
+.activity-summary{display:flex;gap:18px;padding:13px 0 18px;color:#778790;font-size:10px}
+.activity-summary span{display:flex;align-items:center;gap:5px}
+.activity-summary svg{color:#279879}
+.activity-summary span:last-child svg{color:#c28a2e}
+.upcoming-section{border-top:1px solid #edf0f2;padding-top:16px}
+.upcoming-list,.insight-list{list-style:none;padding:0;margin:0}
+.upcoming-list li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #f1f3f4;font-size:11px;color:#425763}
+.upcoming-list small{color:#82919a;font-size:10px}
+.dashboard-empty{margin:0;color:#87949c;font-size:11px;line-height:1.5}
+.insights-panel{grid-column:1/-1}
+.insight-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.insight-item{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid #edf0f2;border-radius:10px;background:#fbfcfd}
+.insight-item>svg{flex:none;margin-top:1px;color:#607b89}
+.insight-item strong{display:block;font-size:11px;color:#304854}
+.insight-item p{margin:4px 0 0;color:#78868f;font-size:10px;line-height:1.5}
+.insight-item.warning{background:#fffcf5;border-color:#f3e7c9}
+.insight-item.warning>svg,.insight-item.critical>svg{color:#b78323}
+.insight-item.critical{background:#fff8f6;border-color:#f1d8d1}
+.insight-item.critical>svg{color:#b34f3e}
+.insight-item.success{background:#f5fbf8;border-color:#dcefe6}
+.insight-item.success>svg{color:#208261}
+@media(max-width:900px){.dashboard-panels{grid-template-columns:1fr}.insights-panel{grid-column:auto}}
+@media(max-width:520px){.bed-status-content{gap:16px}.bed-status-donut{width:126px;height:126px}.bed-status-donut:before{inset:19px}.bed-status-legend{gap:8px}.department-row{grid-template-columns:1fr;gap:8px}.insight-list{grid-template-columns:1fr}.activity-chart{gap:4px}.upcoming-list li{align-items:flex-start;flex-direction:column;gap:4px}}
