@@ -126,6 +126,46 @@ test('AI autocomplete reports provider failures without exposing provider detail
   expect(response.body.message).not.toContain('test-api-key');
 });
 
+test('AI autocomplete explains invalid keys, exhausted quota, and unavailable models', async () => {
+  process.env.OPENAI_API_KEY = 'test-api-key';
+  const token = await tokenFor();
+  const cases = [
+    {
+      status: 401,
+      body: {},
+      message: /rejected the server API key/i,
+    },
+    {
+      status: 429,
+      body: { error: { code: 'insufficient_quota' } },
+      message: /no available quota/i,
+    },
+    {
+      status: 404,
+      body: {},
+      message: /configured AI model is unavailable/i,
+    },
+  ];
+
+  for (const testCase of cases) {
+    jest.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: testCase.status,
+      json: async () => testCase.body,
+    });
+
+    const response = await request(app)
+      .post('/api/ai/autocomplete')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ departmentName: 'Cardiology' });
+
+    expect(response.status).toBe(502);
+    expect(response.body.message).toMatch(testCase.message);
+    expect(response.body.message).not.toContain('test-api-key');
+    jest.restoreAllMocks();
+  }
+});
+
 test('AI autocomplete denies users without department editing permission', async () => {
   process.env.OPENAI_API_KEY = 'test-api-key';
   const token = await tokenFor('nurse');

@@ -39,6 +39,26 @@ export async function completeDepartmentSpecialty({ departmentName, prefix }) {
   }
 
   if (!response.ok) {
+    let providerCode;
+    try {
+      const errorBody = await response.json();
+      providerCode = errorBody?.error?.code;
+    } catch {
+      providerCode = undefined;
+    }
+
+    if (response.status === 401) {
+      throw new ApiError(502, 'The AI provider rejected the server API key. Check OPENAI_API_KEY in Render.');
+    }
+    if (response.status === 429 && providerCode === 'insufficient_quota') {
+      throw new ApiError(502, 'The AI provider account has no available quota. Check its billing and usage limits.');
+    }
+    if (response.status === 429) {
+      throw new ApiError(502, 'The AI provider is rate-limiting requests. Wait a moment and try again.');
+    }
+    if (response.status === 404) {
+      throw new ApiError(502, 'The configured AI model is unavailable. Check OPENAI_MODEL in Render.');
+    }
     throw new ApiError(502, 'The AI suggestion provider rejected the request.');
   }
 
