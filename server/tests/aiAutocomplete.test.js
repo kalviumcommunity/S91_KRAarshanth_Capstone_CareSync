@@ -7,8 +7,8 @@ const { default: app } = await import('../src/app.js');
 const { default: User } = await import('../src/models/User.js');
 
 const jwtSecret = 'test-jwt-secret-at-least-32-characters-long';
-const originalApiKey = process.env.OPENAI_API_KEY;
-const originalModel = process.env.OPENAI_MODEL;
+const originalApiKey = process.env.GEMINI_API_KEY;
+const originalModel = process.env.GEMINI_MODEL;
 
 beforeAll(async () => {
   process.env.JWT_SECRET = jwtSecret;
@@ -19,10 +19,10 @@ beforeAll(async () => {
 afterEach(async () => {
   await User.deleteMany({});
   jest.restoreAllMocks();
-  if (originalApiKey === undefined) delete process.env.OPENAI_API_KEY;
-  else process.env.OPENAI_API_KEY = originalApiKey;
-  if (originalModel === undefined) delete process.env.OPENAI_MODEL;
-  else process.env.OPENAI_MODEL = originalModel;
+  if (originalApiKey === undefined) delete process.env.GEMINI_API_KEY;
+  else process.env.GEMINI_API_KEY = originalApiKey;
+  if (originalModel === undefined) delete process.env.GEMINI_MODEL;
+  else process.env.GEMINI_MODEL = originalModel;
 });
 
 afterAll(async () => {
@@ -40,7 +40,12 @@ async function tokenFor(role = 'hospital_admin') {
 }
 
 function providerResponse(content) {
-  return { ok: true, json: async () => ({ choices: [{ message: { content } }] }) };
+  return {
+    ok: true,
+    json: async () => ({
+      candidates: [{ content: { parts: [{ text: content }] } }],
+    }),
+  };
 }
 
 test('AI autocomplete requires an authorized user', async () => {
@@ -52,8 +57,8 @@ test('AI autocomplete requires an authorized user', async () => {
 });
 
 test('AI autocomplete sends only department metadata and returns the suggestion', async () => {
-  process.env.OPENAI_API_KEY = 'test-api-key';
-  process.env.OPENAI_MODEL = 'test-model';
+  process.env.GEMINI_API_KEY = 'test-api-key';
+  process.env.GEMINI_MODEL = 'test-model';
   const token = await tokenFor();
   const fetchMock = jest.spyOn(globalThis, 'fetch').mockResolvedValue(providerResponse('Cardiology and cardiovascular services'));
 
@@ -69,21 +74,25 @@ test('AI autocomplete sends only department metadata and returns the suggestion'
   expect(response.status).toBe(200);
   expect(response.body).toEqual({ success: true, suggestion: 'Cardiology and cardiovascular services' });
   expect(fetchMock).toHaveBeenCalledWith(
-    'https://api.openai.com/v1/chat/completions',
+    'https://generativelanguage.googleapis.com/v1beta/models/test-model:generateContent',
     expect.objectContaining({
-      headers: expect.objectContaining({ Authorization: 'Bearer test-api-key' }),
-      body: expect.stringContaining('"model":"test-model"'),
+      headers: expect.objectContaining({
+        'X-goog-api-key': 'test-api-key',
+        'Content-Type': 'application/json',
+      }),
+      body: expect.stringContaining('"generationConfig"'),
     }),
   );
   const providerBody = JSON.parse(fetchMock.mock.calls[0][1].body);
-  expect(providerBody.messages[1].content).toContain('Cardiology');
-  expect(providerBody.messages[1].content).toContain('Cardio');
-  expect(providerBody.messages[1].content).not.toContain('patientNotes');
-  expect(providerBody.messages[1].content).not.toContain('must not be sent');
+  expect(providerBody.systemInstruction.parts[0].text).toContain('hospital department');
+  expect(providerBody.contents[0].parts[0].text).toContain('Cardiology');
+  expect(providerBody.contents[0].parts[0].text).toContain('Cardio');
+  expect(providerBody.contents[0].parts[0].text).not.toContain('patientNotes');
+  expect(providerBody.contents[0].parts[0].text).not.toContain('must not be sent');
 });
 
 test('AI autocomplete validates department metadata before calling the provider', async () => {
-  process.env.OPENAI_API_KEY = 'test-api-key';
+  process.env.GEMINI_API_KEY = 'test-api-key';
   const token = await tokenFor();
   const fetchMock = jest.spyOn(globalThis, 'fetch');
 
@@ -97,7 +106,7 @@ test('AI autocomplete validates department metadata before calling the provider'
 });
 
 test('AI autocomplete reports missing server configuration', async () => {
-  delete process.env.OPENAI_API_KEY;
+  delete process.env.GEMINI_API_KEY;
   const token = await tokenFor();
   const fetchMock = jest.spyOn(globalThis, 'fetch');
 
@@ -107,12 +116,12 @@ test('AI autocomplete reports missing server configuration', async () => {
     .send({ departmentName: 'Cardiology' });
 
   expect(response.status).toBe(503);
-  expect(response.body.message).toMatch(/OPENAI_API_KEY/);
+  expect(response.body.message).toMatch(/GEMINI_API_KEY/);
   expect(fetchMock).not.toHaveBeenCalled();
 });
 
 test('AI autocomplete reports provider failures without exposing provider details', async () => {
-  process.env.OPENAI_API_KEY = 'test-api-key';
+  process.env.GEMINI_API_KEY = 'test-api-key';
   const token = await tokenFor();
   jest.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: false, status: 401 });
 
@@ -122,28 +131,28 @@ test('AI autocomplete reports provider failures without exposing provider detail
     .send({ departmentName: 'Cardiology' });
 
   expect(response.status).toBe(502);
-  expect(response.body.message).toMatch(/provider rejected/);
+  expect(response.body.message).toMatch(/Gemini suggestion provider rejected/);
   expect(response.body.message).not.toContain('test-api-key');
 });
 
 test('AI autocomplete explains invalid keys, exhausted quota, and unavailable models', async () => {
-  process.env.OPENAI_API_KEY = 'test-api-key';
+  process.env.GEMINI_API_KEY = 'test-api-key';
   const token = await tokenFor();
   const cases = [
     {
-      status: 401,
-      body: {},
-      message: /rejected the server API key/i,
+      status: 400,
+      body: { error: { status: 'API_KEY_INVALID', message: 'API key not valid' } },
+      message: /Gemini rejected the server API key/i,
     },
     {
       status: 429,
-      body: { error: { code: 'insufficient_quota' } },
-      message: /no available quota/i,
+      body: { error: { status: 'RESOURCE_EXHAUSTED', message: 'Quota exceeded' } },
+      message: /Gemini quota or rate limit reached/i,
     },
     {
       status: 404,
-      body: {},
-      message: /configured AI model is unavailable/i,
+      body: { error: { status: 'NOT_FOUND', message: 'Model not found' } },
+      message: /configured Gemini model is unavailable/i,
     },
   ];
 
@@ -167,7 +176,7 @@ test('AI autocomplete explains invalid keys, exhausted quota, and unavailable mo
 });
 
 test('AI autocomplete denies users without department editing permission', async () => {
-  process.env.OPENAI_API_KEY = 'test-api-key';
+  process.env.GEMINI_API_KEY = 'test-api-key';
   const token = await tokenFor('nurse');
   const fetchMock = jest.spyOn(globalThis, 'fetch');
 
