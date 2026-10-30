@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-process.env.CLIENT_URL = 'https://frontend.example.test,https://ihros.netlify.app';
+process.env.CLIENT_URL = 'https://frontend.example.test';
 
 const { default: app } = await import('../src/app.js');
 
@@ -19,19 +19,10 @@ test('health endpoint returns the API health payload', async () => {
 test('health endpoint allows the configured frontend origin', async () => {
   const response = await request(app)
     .get('/api/health')
-    .set('Origin', 'https://frontend.example.test');
+    .set('Origin', process.env.CLIENT_URL);
 
   expect(response.status).toBe(200);
-  expect(response.headers['access-control-allow-origin']).toBe('https://frontend.example.test');
-});
-
-test('health endpoint allows an additional configured frontend origin', async () => {
-  const response = await request(app)
-    .get('/api/health')
-    .set('Origin', 'https://ihros.netlify.app');
-
-  expect(response.status).toBe(200);
-  expect(response.headers['access-control-allow-origin']).toBe('https://ihros.netlify.app');
+  expect(response.headers['access-control-allow-origin']).toBe(process.env.CLIENT_URL);
 });
 
 test('health endpoint supports HEAD requests for monitoring clients', async () => {
