@@ -1,4 +1,4 @@
-# IHROS — Intelligent Hospital Resource Optimization System
+ # IHROS — Intelligent Hospital Resource Optimization System
 
 IHROS is a hospital resource management application for organizing doctors, patients, departments, beds, and appointments. It provides authenticated workflows for hospital staff and a dashboard for reviewing operational data.
 
@@ -17,14 +17,15 @@ IHROS provides a React interface and a REST API backed by MongoDB. Staff can man
 - Database: MongoDB, Mongoose
 - Authentication: JWT, bcrypt, optional Google sign-in
 - Testing: Jest, Supertest
-- AI assistance: server-side OpenAI API integration for department specialty suggestions
+- AI assistance: server-side Gemini API integration for department specialty suggestions
 - Deployment: Netlify (frontend), Render (backend), Docker Compose (local API and database)
 
 ## Key features
 
-- Dashboard and CRUD workflows for doctors, patients, departments, beds, and appointments
+- Operational dashboard with timezone-aware bed utilization by department, seven-day appointment trends, upcoming schedules, and rule-based capacity/staffing alerts
+- CRUD workflows for doctors, patients, departments, beds, and appointments
 - Username/password authentication, JWT-protected APIs, and role-based authorization
-- Optional Google sign-in and authenticated patient file uploads
+- Google sign-in with verified-email account linking, plus authenticated patient file uploads
 - Jest and Supertest API tests
 - Dockerized API and MongoDB development environment
 - Authenticated AI assistance for editable department specialty descriptions
@@ -163,7 +164,7 @@ Set at least these values in `server/.env`:
 Optional integrations:
 
 - Google sign-in: set `GOOGLE_CLIENT_ID` in `server/.env` and `VITE_GOOGLE_CLIENT_ID` in `client/.env` to the same OAuth web client ID. Create `client/.env` from `client/.env.example` if enabling this locally.
-- AI specialty suggestions: set `OPENAI_API_KEY` in `server/.env`. Keep the key server-side; never commit it or add it to the frontend.
+- AI specialty suggestions: set `GEMINI_API_KEY` in `server/.env`. Keep the key server-side; never commit it or add it to the frontend.
 - Tests: set `MONGO_TEST_URI` only if you want to use a separate disposable MongoDB test database; otherwise tests default to `mongodb://127.0.0.1:27017/ihros_test`.
 
 Never commit `.env` files or real credentials. The checked-in `.env.example` files contain placeholders only.
@@ -197,11 +198,11 @@ The tests cover the health endpoint, authentication and authorization, Google si
 
 ## AI department specialty autocomplete
 
-The Departments form can generate a concise specialty description from the department name and optional text already entered. The authenticated API sends only those two fields to OpenAI; do not enter patient information. Suggestions remain editable and are not saved until the user submits the form.
+The Departments form can generate a concise specialty description from the department name and optional text already entered. The authenticated API sends only those two fields to Gemini; do not enter patient information. Suggestions remain editable and are not saved until the user submits the form.
 
-To enable it locally, set `OPENAI_API_KEY` in `server/.env`. The optional `OPENAI_MODEL` setting defaults to `gpt-4o-mini`. Keep the key on the server; never add it to frontend environment variables or commit it. The route returns a clear configuration error when the key is missing.
+To enable it locally, set `GEMINI_API_KEY` in `server/.env`. The optional `GEMINI_MODEL` setting defaults to `gemini-flash-latest`. Keep the key on the server; never add it to frontend environment variables or commit it. The route returns a clear configuration error when the key is missing.
 
-For the deployed API, add `OPENAI_API_KEY` (and optionally `OPENAI_MODEL`) in the `ihros-api` Render service's environment settings. Render restarts the service after the change; no frontend secret or deployment is needed.
+For the deployed API, add `GEMINI_API_KEY` (and optionally `GEMINI_MODEL`) in the `ihros-api` Render service's environment settings. Render restarts the service after the change; no frontend secret or deployment is needed.
 
 ## Run with Docker
 
@@ -212,7 +213,7 @@ Copy-Item server/.env.example server/.env
 ```
 
 In `server/.env`, replace the example `JWT_SECRET` with a strong random secret. Compose configures the API to connect to its MongoDB container, so the `MONGO_URI` value in this file is overridden.
-To enable AI autocomplete in Docker, also set `OPENAI_API_KEY` in `server/.env`; the model setting is optional.
+To enable AI autocomplete in Docker, also set `GEMINI_API_KEY` in `server/.env`; the model setting is optional.
 
 Build and start the application:
 
@@ -232,11 +233,11 @@ The service is configured from the root [render.yaml](render.yaml) Blueprint. Se
 
 The repository includes a `netlify.toml` with the Vite build command, publish directory, and SPA fallback needed by React Router.
 
-Live frontend: [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-bombolone-7b9dcd.netlify.app/)
+Live frontend: [https://ihros.netlify.app/](https://ihros.netlify.app/)
 
 ### KRA 2.17 submission evidence
 
-- **Deployed frontend:** [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-bombolone-7b9dcd.netlify.app/)
+- **Deployed frontend:** [https://ihros.netlify.app/](https://ihros.netlify.app/)
 - **Public access:** verified on 2026-10-29; an unauthenticated request returned HTTP 200 and the login page loaded.
 - **Netlify build:** `npm run build --workspace client`
 - **Publish directory:** `client/dist`
@@ -245,8 +246,8 @@ Live frontend: [https://gleeful-bombolone-7b9dcd.netlify.app/](https://gleeful-b
 
 1. The backend is deployed at `https://ihros-api.onrender.com`.
 2. In Netlify, choose **Add new site → Import an existing project** and connect this GitHub repository. Keep the base directory at the repository root; the build settings are read from `netlify.toml`.
-3. In the Netlify site settings, add the environment variable `VITE_API_URL` with the value `https://ihros-api.onrender.com/api`. Trigger a new deploy after adding or changing the variable.
-4. Once Netlify assigns the site URL, set the backend's `CLIENT_URL` environment variable to that exact origin (for example, `https://<your-site>.netlify.app`) and redeploy/restart the backend. The API's CORS policy allows this configured origin.
+3. `netlify.toml` sets `VITE_API_URL` to the deployed API by default. Override it in Netlify only when using a different API.
+4. Set the backend's `CLIENT_URL` environment variable in Render to the exact frontend origin (for this site, `https://ihros.netlify.app`) and redeploy/restart the backend. If the site has multiple Netlify domains, separate the exact origins with commas. The API's CORS policy allows only the configured origins.
 5. Open the deployed site, refresh a nested route such as `/login`, and verify that login and API-backed pages can reach the deployed backend.
 
 For the required final walkthrough, record 5–8 minutes with your camera on and your entire screen shared. Demonstrate the live application, major workflows, repository structure, README, architecture decisions, challenges, and lessons learned. Upload the video to Google Drive, set access to "Anyone with the link can view", and test it in an incognito browser. Add the public URL to the final PR before submission.
@@ -254,7 +255,7 @@ For the required final walkthrough, record 5–8 minutes with your camera on and
 ## Final submission checklist
 
 - [ ] Confirm the frontend and backend links work in a signed-out browser.
-- [ ] Add `OPENAI_API_KEY` privately to the Render service if the deployed AI autocomplete should be enabled. Never put this key in the frontend or this repository.
+- [ ] Add `GEMINI_API_KEY` privately to the Render service if the deployed AI autocomplete should be enabled. Never put this key in the frontend or this repository.
 - [ ] Record a 5–8 minute walkthrough with your camera on and the entire screen shared.
 - [ ] Upload the video to Google Drive, set access to "Anyone with the link can view", and test the link in an incognito browser.
 - [ ] Add the public video URL to the final PR and the README.
@@ -269,7 +270,6 @@ For the required final walkthrough, record 5–8 minutes with your camera on and
 - Add persistent object storage for patient uploads in production deployments.
 - Enable and verify Google OAuth on the deployed frontend and backend.
 - Add frontend component and end-to-end tests for critical hospital workflows.
-- Expand the dashboard with validated operational trends and resource-planning insights.
 
 ## Contributors
 
@@ -277,7 +277,7 @@ For the required final walkthrough, record 5–8 minutes with your camera on and
 
 ### Demo account
 
-Register a hospital admin from `/register`, or seed one manually in MongoDB. Self-registration cannot create `super_admin` accounts.
+There is no preconfigured demo/admin account. Public registration at `/register` creates a `nurse` account; it cannot grant administrator roles. To grant `hospital_admin` access, register your own account, then update that user's `role` field to `hospital_admin` in the MongoDB `users` collection using an authorized database admin account. Sign out and sign in again after changing the role. Never share or commit database credentials.
 
 ## Earlier KRA Git workflow example
 

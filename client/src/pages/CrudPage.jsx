@@ -1,10 +1,11 @@
-import { Plus, Pencil, Trash2, RefreshCw, Sparkles } from 'lucide-react';
+import { Plus, Pencil, Trash2, RefreshCw, Sparkles, Download } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import EmptyState from '../components/EmptyState';
+import { downloadCsv } from '../utils/csv';
 
 export default function CrudPage({ title, endpoint, fields }) {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ export default function CrudPage({ title, endpoint, fields }) {
   const [busy, setBusy] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
   const [aiError, setAiError] = useState('');
+  const [exporting, setExporting] = useState(false);
   const [error, setError] = useState('');
 
   const load = () => {
@@ -82,13 +84,44 @@ export default function CrudPage({ title, endpoint, fields }) {
     }
   };
 
+  const exportCsv = async () => {
+    setExporting(true);
+    setError('');
+    try {
+      const records = [];
+      let page = 1;
+      let totalPages = 1;
+
+      do {
+        const response = await api.get(`/${endpoint}`, { params: { page, limit: 100 } });
+        if (!Array.isArray(response.data.data)) throw new Error('The server returned an invalid records list');
+        records.push(...response.data.data);
+        totalPages = Math.max(page, Number(response.data.pagination?.totalPages) || page);
+        page += 1;
+      } while (page <= totalPages);
+
+      downloadCsv(`${endpoint}-${new Date().toISOString().slice(0, 10)}.csv`, fields, records);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Could not download CSV');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div className="page">
       <PageHeader
         eyebrow="Operations"
         title={title}
-        description="MongoDB-backed CRUD with validated REST endpoints."
-        action={<button className="secondary" onClick={load}><RefreshCw size={16} /> Refresh</button>}
+        description="Manage records and download this dataset as a CSV file."
+        action={
+          <div className="page-actions">
+            <button className="secondary" onClick={exportCsv} disabled={exporting}>
+              <Download size={16} /> {exporting ? 'Preparing CSV…' : 'Download CSV'}
+            </button>
+            <button className="secondary" onClick={load}><RefreshCw size={16} /> Refresh</button>
+          </div>
+        }
       />
 
       {error && <div className="alert error">{error}</div>}
